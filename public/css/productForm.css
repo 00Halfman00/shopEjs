@@ -1,0 +1,75 @@
+.main-main {
+  margin: 1rem;
+}
+.product-form__controls {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-main {
+  margin: 1rem;
+}
+
+.product-form__controls {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-form__title-input,
+.product-form__description-textarea,
+.product-form__price-input,
+.product-form__image-input {
+  width: 20rem;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+  padding: 0.5rem;
+  margin-bottom: 0.7rem;
+  outline: none;
+}
+
+.product-form__btn {
+  background-color: rgb(243, 182, 27);
+  font-weight: bold;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: fit-content;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+}
+
+.product-form__btn:hover {
+  color: white;
+  background-color: green;
+}
+
+.product-form {
+  margin: 1rem;
+  padding: 1rem;
+  background-color: whitesmoke;
+  max-width: fit-content;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+}
+
+.product-form__title-input:hover,
+.product-form__description-textarea:hover,
+.product-form__price-input:hover,
+.product-form__image-input:hover {
+  background-color: khaki;
+}
+
+.product-form__title-input:focus,
+.product-form__description-textarea:focus,
+.product-form__price-input:focus,
+.product-form__image-input:focus {
+  background-color: khaki;
+}
+
+img {
+  width: 30rem;
+}

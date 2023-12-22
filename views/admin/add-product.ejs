@@ -1,0 +1,29 @@
+<%-include('../templates/head.ejs')%>
+  <body>
+    <%-include('../templates/nav.ejs')%>
+    <main class="main-main">
+      <h1 class="page-title"><%= pageTitle %></h1>
+      <form class="product-form" action="/admin/add-product" method="POST">
+        <div class="product-form__controls">
+          <label class="product-form__title-label" for="title">Title</label>
+          <input class="product-form__title-input" type="text" name="title"/>
+        </div>
+        <div class="product-form__controls">
+          <label class="product-form__image-label" for="image">Image URL</label>
+          <input class="product-form__image-input" type="text" name="image"/>
+        </div>
+        <div class="product-form__controls">
+          <label class="product-form__description-label" for="description">Description</label>
+          <textarea class="product-form__description-textarea" type="text" rows="3" name="description"></textarea>
+        </div>
+        <div class="product-form__controls">
+          <label class="product-form__price-label" for="price">Price</label>
+          <input class="product-form__price-input" type="number" name="price" step=".01" min="0" max="10000"/>
+        </div>
+        <div class="product-form__controls">
+          <button class="product-form__btn" type="submit">submit</button>
+        </div>
+        </form>
+    </main>
+  </body>
+</html>

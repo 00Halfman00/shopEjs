@@ -1,0 +1,36 @@
+<%-include('../templates/head.ejs')%>
+<body>
+  <%-include('../templates/nav.ejs')%>
+  <main class="main-main">
+    <h1 class="page-title"><%= pageTitle %></h1>
+    <div class="grid">
+      <% if (products.length > 0) {%>
+      <% for(let product of products) {%>
+        <article class="card-container">
+          <header class="card">
+            <h1 class="product-title"><%= product.title[0].toUpperCase() + product.title.slice(1) %></h1>
+          </header>
+          <div class="card-cotrols">
+            <img src=<%= product.image%> alt="a project image"></ing>
+          </div>
+          <div class="card">
+            <p class="product-price">$<%=product.price%></p>
+          </div>
+          <div class="card description">
+            <p class="product-description"><%= product.description %></p>
+          </div>
+          <div class="card-controls btns">
+            <a class="edit-btn" href="/admin/edit-product/<%=product.id%>">edit</a>
+            <form class="form__delete-btn" action="/admin/delete-product/<%=product.id%>" method="POST">
+              <button class="delete-btn" type="submit">delete</button>
+            </form>
+          </div>
+        </article>
+      <% } %>
+      <%} else {%>
+        <h1>Empty at the time</h1>
+      <% } %>
+    </div>
+  </main>
+
+</body>
