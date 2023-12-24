@@ -1,5 +1,5 @@
 const { Product } = require('../models/product');
-
+const {Cart} = require('../models/cart');
 exports.getHome = (req, res, next) => {
   res.render('shop/home', { pageTitle: 'Home' });
 };
@@ -13,13 +13,14 @@ exports.postCart = (req, res, next) => {
   if(req.params.productId === productId){
     res.redirect(`products/${productId}`);
   }
-  res.redirect('products');
+  Cart.add2Cart(productId, () => {
+    res.redirect('products');
+  })
 }
 
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', { pageTitle: 'Orders' });
 };
-
 exports.getProduct = (req, res, next) => {
   const id = req.params.productId;
   Product.getById(id, (product) => {
