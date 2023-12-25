@@ -1,22 +1,24 @@
 const { Product } = require('../models/product');
-const {Cart} = require('../models/cart');
+const { Cart } = require('../models/cart');
 exports.getHome = (req, res, next) => {
   res.render('shop/home', { pageTitle: 'Home' });
 };
 
 exports.getCart = (req, res, next) => {
-  res.render('shop/cart', { pageTitle: 'Cart' });
+  Cart.getCart((cart) => {
+    res.render('shop/cart', { pageTitle: 'Cart', cart: cart });
+  });
 };
 
 exports.postCart = (req, res, next) => {
   const productId = req.body.productId;
-  if(req.params.productId === productId){
-    res.redirect(`products/${productId}`);
-  }
   Cart.add2Cart(productId, () => {
+    if (req.body.page) {
+      res.redirect(`products/${productId}`);
+    }
     res.redirect('products');
-  })
-}
+  });
+};
 
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', { pageTitle: 'Orders' });
