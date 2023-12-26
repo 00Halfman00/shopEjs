@@ -33,6 +33,8 @@ exports.Product = class Product {
     });
   }
 
+  static editProduct(){}
+
   static fetchAll(callback) {
     getProductsFromFile(callback);
   }

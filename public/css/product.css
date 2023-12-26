@@ -17,6 +17,9 @@
   border-radius: 0.35rem;
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
   background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card {
@@ -66,7 +69,8 @@ img {
 }
 
 .details-btn:hover, .add-btn:hover {
-  background-color: rgb(243, 182, 27);
+  background-color: green;
+  color: white;
 }
 
 img {
@@ -97,7 +101,7 @@ h2 {
 
 .details-btn,
 .product__add-btn, .add-btn {
-  background-color: beige;
+  background-color: rgb(243, 182, 27);
   font-weight: bold;
   padding: 0;
   margin: 0;

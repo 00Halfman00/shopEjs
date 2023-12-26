@@ -1,5 +1,7 @@
 const { Product } = require('../models/product');
 const { Cart } = require('../models/cart');
+
+
 exports.getHome = (req, res, next) => {
   res.render('shop/home', { pageTitle: 'Home' });
 };

@@ -10,6 +10,7 @@ const {
   postCart,
 } = require('../controllers/products');
 
+
 router.get('/products', getProducts);
 router.get('/cart', getCart);
 router.post('/cart', postCart);
