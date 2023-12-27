@@ -5,8 +5,6 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  // bot edit and add pages use this controller, so check to see if product exist before adding but how to send productId
-
   if (
     req.body.title.trim()[0] &&
     req.body.image.startsWith('http') &&
@@ -32,8 +30,9 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   const productId = req.params.productId;
-  Product.getById(productId, (product) => {
-    res.redirect('/products');
+  const updatedProduct = req.body;
+  Product.updateProduct(productId, updatedProduct, (product) => {
+    res.render('shop/product', { pageTitle: 'Product', product: product });
   });
 };
 
