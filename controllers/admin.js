@@ -29,9 +29,8 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const productId = req.params.productId;
-  const updatedProduct = req.body;
-  Product.updateProduct(productId, updatedProduct, (product) => {
+  const updatedProduct = {...req.body};
+  Product.updateProduct(updatedProduct, (product) => {
     res.render('shop/product', { pageTitle: 'Product', product: product });
   });
 };

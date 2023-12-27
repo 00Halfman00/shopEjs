@@ -38,12 +38,18 @@ exports.Product = class Product {
     });
   }
 
-  static updateProduct(id, updatedProduct, callback) {
+  static updateProduct({ id, title, image, description, price }, callback) {
     getProductsFromFile((products) => {
       let product = '';
       for (let i = 0; i < products.length; ++i) {
         if (products[i].id === id) {
-          products[i] = { ...updatedProduct, id };
+          products[i] = {
+            id: id,
+            title: title.trim(),
+            image: image.trim(),
+            description: description.trim(),
+            price: price.trim(),
+          };
           product = products[i];
           writeProducts2File(products);
           break;

@@ -28,7 +28,7 @@ exports.getOrders = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const id = req.params.productId;
   Product.getById(id, (product) => {
-    res.render('shop/product', { pageTitle: 'Products', product: product });
+    res.render('shop/product', { pageTitle: 'Product', product: product });
   });
 };
 

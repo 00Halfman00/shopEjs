@@ -173,3 +173,68 @@ a {
 .Orders {
   color:green;
 }
+
+@media (max-width: 700px) {
+
+ .page-title {
+  text-align: center;
+ }
+ .main-header {
+  height: fit-content;
+  padding-top: .3rem;
+  padding-bottom: .3rem;
+ }
+ .main-header__nav {
+  height: fit-content;
+  padding-top: .3rem;
+  padding-bottom: .3rem;
+ }
+ .main-header__items-list {
+  flex-wrap: wrap;
+  height: fit-content;
+  padding-top: .3rem;
+  padding-bottom: .3rem;
+  justify-content: space-around;
+ }
+ .main-header__item {
+  padding-top: .3rem;
+  padding-bottom: .3rem;
+ }
+
+  label, input, textarea {
+    max-width: 95%;
+  }
+
+  a {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+  }
+}
+
+@media (max-width: 300px) {
+
+  .card-cotrols.btns {
+    height: max-content;
+    margin: 0;
+  }
+  .page-title {
+    font-size: x-large;
+  }
+  .btns {
+    width: 100%;
+    justify-content: space-around;
+  }
+  .card {
+    margin-top: .5rem;
+  }
+  .add-btn {
+    width: 100%;
+    padding-top: .1rem;
+  }
+
+  .card-container {
+    align-items: center;
+  }
+
+}
+
