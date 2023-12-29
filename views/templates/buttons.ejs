@@ -1,4 +1,5 @@
 <form class="product__add-btn" action="/cart" method="POST">
-  <button class="add-btn" type="submit">Add to Cart</button>
+  <button class="add-btn" type="submit"><%= pageTitle === "Cart" ? "Delete" : "Add to Cart" %></button>
   <input type="hidden" name="productId" value=<%=product.id%> >
+  <input type="hidden" name="pageTitle" value=<%=pageTitle%> >
 </form>

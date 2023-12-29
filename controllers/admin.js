@@ -36,10 +36,13 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getAdminProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  const {productId} = req.body || null;
+  Product.fetchAll(productId, (products) => {
     res.render('admin/products-list', {
       pageTitle: 'Admin Products',
       products: products,
     });
   });
 };
+
+

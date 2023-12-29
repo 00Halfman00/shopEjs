@@ -59,7 +59,15 @@ exports.Product = class Product {
     });
   }
 
-  static fetchAll(callback) {
-    getProductsFromFile(callback);
+  static fetchAll(id, callback) {
+    getProductsFromFile((products) => {
+      if (id) {
+        products = products.filter((p) => p.id !== id) || [];
+        callback(products);
+        writeProducts2File(products);
+      } else {
+        callback(products);
+      }
+    });
   }
 };

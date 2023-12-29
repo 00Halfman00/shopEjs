@@ -23,7 +23,7 @@
             <a class="details-btn" href="/admin/edit-product/<%=product.id%>">edit</a>
             <form class="product__add-btn" action="/admin/delete-product" method="POST">
               <button class="add-btn" type="submit">delete</button>
-              <input type="hidden" name="productId" value=<%product.id%> >
+              <input type="hidden" name="productId" value="<%=product.id%>" >
             </form>
           </div>
         </article>

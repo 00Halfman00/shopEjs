@@ -2,7 +2,6 @@
 <body>
   <%-include('../templates/nav.ejs')%>
   <main class="main-main">
-    <h1 class="page-title"><%=pageTitle%></h1>
     <div class="grid">
       <% if (cart[0].products.length > 0) {%>
       <% for(let product of cart[0].products) {%>

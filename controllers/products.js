@@ -1,7 +1,6 @@
 const { Product } = require('../models/product');
 const { Cart } = require('../models/cart');
 
-
 exports.getHome = (req, res, next) => {
   res.render('shop/home', { pageTitle: 'Home' });
 };
@@ -13,13 +12,16 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
-  const productId = req.body.productId;
-  Cart.add2Cart(productId, () => {
-    if (req.body.page) {
-      res.redirect(`products/${productId}`);
-    }
-    res.redirect('products');
-  });
+  const { productId, pageTitle } = req.body;
+  if (pageTitle !== 'Cart') {
+    Cart.add2Cart(productId, () => {
+      res.redirect('products');
+    });
+  } else {
+    Cart.removeFromCart(productId, (products, callback) => {
+      res.render('shop/cart', { pageTitle: 'Cart', cart: products });
+    });
+  }
 };
 
 exports.getOrders = (req, res, next) => {
@@ -33,7 +35,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll((id = null), (products) => {
     res.render('shop/products-list', {
       pageTitle: 'Products',
       products: products,
