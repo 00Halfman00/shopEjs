@@ -1,13 +1,7 @@
-.main-main {
-  margin: 1rem;
-}
+
 .product-form__controls {
   display: flex;
   flex-direction: column;
-}
-
-.main-main {
-  margin: 1rem;
 }
 
 .product-form__controls {
