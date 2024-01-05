@@ -50,7 +50,7 @@ const sequelize = new Sequelize(
         .catch((err) => (err ? console.log('SEQUELIZE IS BROKEN', err) : ''))
       )
     } else {
-      rej(console.log('rejected'))
+      rej('')
     }
   })
 

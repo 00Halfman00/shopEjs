@@ -12,10 +12,6 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// app.use('/admin', adminRoute);
-// app.use('/', shopRoute);
-// app.use(status404);
-
 db.then(() => {
   app.use((req, res, next) => {
     User.findByPk(1)
@@ -34,4 +30,3 @@ db.then(() => {
   .then(() => app.listen(3000))
   .catch(err => console.log(err))
 
-module.exports = app;

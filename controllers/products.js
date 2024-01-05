@@ -3,7 +3,6 @@ const Cart = require('../models/cart');
 const CartItem = require('../models/cart-item');
 
 exports.getHome = (req, res, next) => {
-  console.log(req.user)
   res.render('shop/home', { pageTitle: 'Home', user: req.user.dataValues });
 };
 
