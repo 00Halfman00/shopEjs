@@ -39,9 +39,10 @@
 
 .card-image,
 img {
-  max-width: 100%;
+  max-width: fit-content;
+  max-height:max-content;
   border-radius: 0.35rem;
-  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+  /* box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26); */
 }
 
 .product-title {
@@ -75,7 +76,8 @@ img {
 
 img {
   background-color: whitesmoke;
-  resize: 80%;
+  /* max-width: fit-content;
+  max-height: fit-content; */
 }
 
 p {
@@ -86,9 +88,6 @@ h2 {
   margin: 0;
 }
 
-/* .description {
-  background-color: beige;
-} */
 
 .card-controls.btns {
   height: 2rem;

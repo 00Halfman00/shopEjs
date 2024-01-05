@@ -9,7 +9,13 @@ const Product = sequelize.define('Product', {
     primaryKey: true,
   },
   title: { type: STRING, allowNull: false },
-  image: { type: STRING, allowNull: false },
+  image: {
+    type: STRING,
+    validate: {
+      isUrl: true,
+    },
+    allowNull: false,
+  },
   description: { type: STRING, allowNull: false },
   price: { type: DECIMAL(10, 2), allowNull: false },
 });
