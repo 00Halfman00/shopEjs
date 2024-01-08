@@ -27,7 +27,7 @@ const sequelize = new Sequelize(
           User.hasOne(Cart);    // getCart, setCart, createCart
           Cart.belongsTo(User); // getUser, setUser, createUser
           Cart.belongsToMany(Product, {through: CartItem});//getProducts, countProducts, hasProduct, setProuducts, addProduct, removeProduct, createProduct
-          Product.belongsToMany(Cart, {through: CartItem});//getCart, countCart, hasCart, setCart, addCart, removeProduct, createProduct
+          Product.belongsToMany(Cart, {through: CartItem});//getCart, countCart, hasCart, setCart, addCart, removeCart, createCart
         })
         .then(() => {
           const User = require('../models/user');
@@ -47,10 +47,11 @@ const sequelize = new Sequelize(
            return user;
         })
         .then((user) => user.createCart())
+        .then(() => console.log('one two three four five six'))
         .catch((err) => (err ? console.log('SEQUELIZE IS BROKEN', err) : ''))
       )
     } else {
-      rej('')
+      rej('the database has bugs')
     }
   })
 

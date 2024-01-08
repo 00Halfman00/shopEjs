@@ -23,7 +23,6 @@ exports.postAddProduct = async (req, res, next) => {
 
 exports.getEditProduct = async (req, res, next) => {
   try {
-    // const product = await Product.findByPk(req.params.productId);
     // const product = await req.user.getProducts({where; {id: req.params.productId}});// returns an array(plural search)
     const product = await Product.findOne({
       where: {
@@ -46,8 +45,6 @@ exports.getEditProduct = async (req, res, next) => {
 
 exports.postEditProduct = async (req, res, next) => {
   try {
-    // const product = await Product.findByPk(req.body.id);
-    // const product = await req.user.getProducts({where; {id: req.body.id}});  // returns an array(plural search)
     const product = await Product.findOne({
       where: {
         [Op.and]: [
@@ -82,8 +79,7 @@ exports.deleteProduct = async (req, res, next) => {
 
 exports.getAdminProducts = async (req, res, next) => {
   try {
-     // const products = await req.user.getProducts({where; {id: req.params.productId}});// returns an array(plural search)
-    const products = await Product.findAll({where: {UserId: req.user.dataValues.id}});
+    const products = await req.user.getProducts();
     res.status(200).render('admin/products-list', {
       pageTitle: 'Admin Products',
       products: products,
