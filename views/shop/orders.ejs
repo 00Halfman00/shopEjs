@@ -1,7 +1,53 @@
 <%-include('../templates/head.ejs')%>
 <body>
   <%-include('../templates/nav.ejs')%>
-  <main class="main-main">
-    <h1 class="page-title"><%=pageTitle%></h1>
+  <div class="user-info">
+    <p class="user-name"><%=user.firstName%> <%=user.lastName%></p>
+    <p class="user-email"><%=user.email%> </p>
+  </div>
+  <main class="main-main main-orders">
+    <div class="grid grid-orders">
+      <% if (orders[0]) {%>
+      <% for(let order of orders) {%>
+        <% total = 0 %>
+        <div class="card-container">
+          <div class="grid" >
+            <p class="product-total"><%=order.createdAt.toDateString() %></p>
+          </div>
+        </div>
+        <% for(let product of order.Products) {%>
+          <% total += +product.price * +product.OrderItem.quantity%>
+          <article class="card-container">
+            <header class="card">
+              <h2 class="product-title"><%= product.title[0].toUpperCase() + product.title.slice(1) %></h2>
+            </header>
+            <div class="card-cotrols">
+              <img src=<%= product.image%> alt="a project image"></ing>
+            </div>
+            <div class="card">
+              <p class="product-price">$<%=product.price%></p>
+              <p class="product-price">Qty: (<%=product.OrderItem.quantity%>)</p>
+            </div>
+            <div class="card description">
+              <p class="product-description"><%= product.description %></p>
+            </div>
+            <div class="card-controls btns">
+              <a class="details-btn" href="/products/<%=product.id%>">Details</a>
+              <%-include('../templates/buttons.ejs', {product: product})%>
+            </div>
+          </article>
+      <% } %>
+      <div class="card-container">
+        <div class="grid" >
+          <p class="product-total">total:</p>
+          <p class="product-total">$<%=total%></p>
+        </div>
+      </div>
+      <hr>
+      <% } %>
+      <%} else {%>
+        <h1>Empty at the time</h1>
+      <% } %>
+    </div>
   </main>
 </body>

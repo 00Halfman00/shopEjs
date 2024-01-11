@@ -8,6 +8,7 @@ const {
   getOrders,
   getProduct,
   postCart,
+  postOrder
 } = require('../controllers/products');
 
 
@@ -16,6 +17,7 @@ router.get('/product', getProduct)
 router.get('/cart', getCart);
 router.post('/cart', postCart);
 router.get('/orders', getOrders);
+router.post('/orders', postOrder);
 router.get('/products/:productId', getProduct);
 router.get('/', getHome);
 

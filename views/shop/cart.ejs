@@ -1,6 +1,13 @@
 <%-include('../templates/head.ejs')%>
 <body>
   <%-include('../templates/nav.ejs')%>
+  <div class="user-info">
+    <p class="user-name"><%=user.firstName%> <%=user.lastName%></p>
+    <p class="user-email"><%=user.email%> </p>
+  </div>
+  <form class="order-btn-container" action="/orders" method="POST">
+   <button class="order-btn" type="submit">Place Orders</button>
+  </form>
   <main class="main-main">
     <div class="grid">
       <% if (cart.length > 0) {%>

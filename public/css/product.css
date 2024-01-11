@@ -1,6 +1,33 @@
 .page-title {
   margin: 1rem;
 }
+.user-info {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+hr {
+  margin: 1rem;
+  height: 5px;
+  color: black;
+  background-color: grey;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+}
+
+.user-name,
+.user-email {
+  padding: 1rem;
+}
+.user-email {
+  color: green;
+}
+.product-total {
+  padding-right: 1rem;
+  font-size: x-large;
+  font-weight: bold;
+}
 
 .grid {
   padding: 0;
@@ -9,6 +36,10 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+}
+
+.grid-orders {
+  flex-direction: column;
 }
 .card-container {
   margin: 1rem;
@@ -40,7 +71,7 @@
 .card-image,
 img {
   max-width: fit-content;
-  max-height:max-content;
+  max-height: max-content;
   border-radius: 0.35rem;
   /* box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26); */
 }
@@ -69,7 +100,9 @@ img {
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
 }
 
-.details-btn:hover, .add-btn:hover {
+.details-btn:hover,
+.add-btn:hover,
+.order-btn:hover {
   background-color: green;
   color: white;
 }
@@ -88,7 +121,6 @@ h2 {
   margin: 0;
 }
 
-
 .card-controls.btns {
   height: 2rem;
   padding: 0;
@@ -99,7 +131,8 @@ h2 {
 }
 
 .details-btn,
-.product__add-btn, .add-btn {
+.product__add-btn,
+.add-btn {
   background-color: rgb(243, 182, 27);
   font-weight: bold;
   padding: 0;
@@ -115,7 +148,7 @@ h2 {
 }
 
 .add-btn {
-  height:100%;
+  height: 100%;
 }
 
 .product__add-btn {
@@ -123,6 +156,5 @@ h2 {
 }
 
 .add-btn {
-  height:100%;
+  height: 100%;
 }
-

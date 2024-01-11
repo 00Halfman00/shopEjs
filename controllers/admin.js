@@ -83,6 +83,7 @@ exports.getAdminProducts = async (req, res, next) => {
     res.status(200).render('admin/products-list', {
       pageTitle: 'Admin Products',
       products: products,
+      user: req.user.dataValues
     });
   } catch (err) {
     throw new Error(err);

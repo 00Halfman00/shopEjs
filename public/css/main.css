@@ -6,6 +6,10 @@ body {
   margin-top: 0;
   padding-top: 0;
 }
+.main-main.main-orders {
+  display: flex;
+  justify-content: center;
+}
 .main-header {
   margin: 0;
   padding: 0;
@@ -42,7 +46,7 @@ h1 {
   margin:0;
 }
 
-a {
+a, .order-btn {
   color: inherit;
   margin: 0.3rem;
   padding-top: 0.5rem;
@@ -178,6 +182,21 @@ a {
 .Orders {
   color:green;
 }
+
+.order-btn-container {
+  display: flex;
+  justify-content: end;
+  margin-right: 1rem;
+}
+
+.order-btn {
+  background-color: rgb(243, 182, 27);
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+}
+
+
 
 @media (max-width: 700px) {
 

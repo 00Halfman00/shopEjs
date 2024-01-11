@@ -1,6 +1,10 @@
 <%-include('../templates/head.ejs')%>
 <body>
   <%-include('../templates/nav.ejs')%>
+  <div class="user-info">
+    <p class="user-name"><%=user.firstName%> <%=user.lastName%></p>
+    <p class="user-email"><%=user.email%> </p>
+  </div>
   <main class="main-main">
     <div class="grid">
       <% if (products.length > 0) {%>
