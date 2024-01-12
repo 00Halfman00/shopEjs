@@ -1,9 +1,3 @@
-
-.product-form__controls {
-  display: flex;
-  flex-direction: column;
-}
-
 .product-form__controls {
   display: flex;
   flex-direction: column;
@@ -62,8 +56,4 @@
 .product-form__price-input:focus,
 .product-form__image-input:focus {
   background-color: khaki;
-}
-
-img {
-  width: 30rem;
 }

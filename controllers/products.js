@@ -17,7 +17,7 @@ exports.postOrder = async (req, res, next) => {
     });
   });
   cart.setProducts(null);
-  res.redirect('/home')
+  res.redirect('/')
 };
 
 exports.getOrders = async (req, res, next) => {
