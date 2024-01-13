@@ -23,7 +23,7 @@
               <p class="product-description"><%= product.description %></p>
             </div>
             <div class="card-controls btns">
-              <a class="details-btn" href="/products/<%=product.id%>">Details</a>
+              <a class="details-btn" href="/products/<%=product._id%>">Details</a>
               <%-include('../templates/buttons.ejs', {product: product})%>
             </div>
           </article>

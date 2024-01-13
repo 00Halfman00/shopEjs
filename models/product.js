@@ -1,23 +1,43 @@
-const {sequelize} = require('../utils/database');
-const { STRING, INTEGER, DECIMAL } = require('sequelize');
+const { BSON } = require('mongodb');
+const { getDb } = require('../utils/database');
 
-const Product = sequelize.define('Product', {
-  id: {
-    type: INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  title: { type: STRING, allowNull: false },
-  image: {
-    type: STRING,
-    validate: {
-      isUrl: true,
-    },
-    allowNull: false,
-  },
-  description: { type: STRING, allowNull: false },
-  price: { type: DECIMAL(10, 2), allowNull: false },
-});
+class Product {
+  constructor(title, image, description, price) {
+    (this.title = title),
+      (this.image = image),
+      (this.description = description),
+      (this.price = price);
+  }
+
+  save() {
+    const db = getDb();
+    return db
+      .collection('products')
+      .insertOne(this)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }
+
+  static fetchAll() {
+    const db = getDb();
+    return db
+      .collection('products')
+      .find()
+      .toArray()
+      .catch((err) => console.log(err));
+  }
+
+  static findById(id) {
+    const db = getDb();
+    return db
+      .collection('products')
+      .find({ _id: new BSON.ObjectId(id) })
+      .next()
+      .then((p) => {
+        return p;
+      })
+      .catch((err) => console.log(err));
+  }
+}
 
 module.exports = Product;
