@@ -13,6 +13,7 @@ ul {
 .main-main {
   margin-top: 0;
   padding-top: 0;
+  width: 100%;
 }
 .main-main.main-orders {
   display: flex;

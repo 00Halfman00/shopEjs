@@ -13,7 +13,7 @@ const {
 
 
 router.get('/products', getProducts);
-// router.get('/product', getProduct)
+router.get('/product', getProduct)
 // router.get('/cart', getCart);
 // router.post('/cart', postCart);
 // router.get('/orders', getOrders);

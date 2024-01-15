@@ -31,7 +31,8 @@ hr {
   max-width: max-content;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  min-width:100%;
+  justify-content:space-around;
 }
 
 .grid-orders {
