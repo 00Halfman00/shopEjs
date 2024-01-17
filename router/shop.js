@@ -4,20 +4,20 @@ const router = express.Router();
 const {
   getProducts,
   getHome,
-  // getCart,
-  // getOrders,
+  getCart,
+  getOrders,
   getProduct,
-  // postCart,
-  // postOrder
+  postCart,
+  postOrder
 } = require('../controllers/products');
 
 
 router.get('/products', getProducts);
 router.get('/product', getProduct)
-// router.get('/cart', getCart);
-// router.post('/cart', postCart);
-// router.get('/orders', getOrders);
-// router.post('/orders', postOrder);
+router.get('/cart', getCart);
+router.post('/cart', postCart);
+router.get('/orders', getOrders);
+router.post('/orders', postOrder);
 router.get('/products/:productId', getProduct);
 router.get('/', getHome);
 

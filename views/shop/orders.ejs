@@ -12,15 +12,13 @@
         <% for(let order of orders) {%>
           <li>
             <% total = 0 %>
-            <div class="card-container">
-              <div class="grid" >
-                <p class="product-total"><%=order.createdAt.toDateString() %></p>
-              </div>
+            <div class="card-container" style="background-color: green;">
+              <p class="product-total" style="background-color: green; color: white">Order</p>
             </div>
             <ul>
-              <% for(let product of order.Products) {%>
+              <% for(let product of order.items) {%>
                 <li>
-                  <% total += +product.price * +product.OrderItem.quantity%>
+                  <% total += +product.price * +product.quantity%>
                   <article class="card-container">
                     <header class="card">
                       <h2 class="product-title"><%= product.title[0].toUpperCase() + product.title.slice(1) %></h2>
@@ -30,7 +28,7 @@
                     </div>
                     <div class="card">
                       <p class="product-price">$<%=product.price%></p>
-                      <p class="product-price">Qty: (<%=product.OrderItem.quantity%>)</p>
+                      <p class="product-price">Qty: (<%=product.quantity%>)</p>
                     </div>
                     <div class="card description">
                       <p class="product-description"><%= product.description %></p>

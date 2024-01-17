@@ -1,7 +1,7 @@
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-  res.render('admin/edit-product', { pageTitle: 'Add Product', edit: false });
+  res.render('admin/edit-product', { pageTitle: 'Add Product', edit: false }); // render form
 };
 
 exports.postAddProduct = async (req, res, next) => {
@@ -13,8 +13,15 @@ exports.postAddProduct = async (req, res, next) => {
     price.trim()[0]
   ) {
     try {
-      const product = new Product(title, image, description, price);
-      product.save();
+      const product = new Product(
+        title,
+        image,
+        description,
+        price,
+        null,
+        req.user._id
+      );
+      product.insert();
       res.status(201).redirect('/admin/admin-products');
     } catch (err) {
       throw new Error(err);
@@ -37,7 +44,6 @@ exports.getEditProduct = async (req, res, next) => {
 
 exports.postEditProduct = async (req, res, next) => {
   try {
-    // by sending the req.body, looking up the product in the database is avoided
     await Product.updateById(req.body);
     res.status(200).redirect('/admin/admin-products');
   } catch (err) {
