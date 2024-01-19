@@ -20,10 +20,26 @@ db.then(() => {
     .next();
 })
   .then((user) => {
-    if (!user) {                 // so the plan is to add carts to the emty array and each cart is an order
-      user = new User('John', 'Rambo', '00johnrambo00@somesome.com', {items: [], total: 0}, [] );
-      user.insert();            // but with quantity and a total. In that case, might as well have total in cart too
-      return user;              // and just get cart and add it untouched
+    if (user) {
+      user = new User(
+        user.firstName,
+        user.lastName,
+        user.email,
+        user.cart,
+        user.order,
+        user._id
+      );
+    }
+    if (!user) {
+      user = new User(
+        'John',
+        'Rambo',
+        '00johnrambo00@somesome.com',
+        { items: [], total: 0 },
+        []
+      ); // so the plan is to add carts to the emty array and each cart is an order
+      user.insert(); // but with quantity and a total. In that case, might as well have total in cart too
+      return user; // and just get cart and add it untouched
     }
     return user;
   })

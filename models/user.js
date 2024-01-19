@@ -6,7 +6,7 @@ class User {
     (this.firstName = firstName),
       (this.lastName = lastName),
       (this.email = email),
-      (this.cart = cart), // {items: [ {_id, qty: 1}, {_id, qty: 2} ]}
+      (this.cart = cart),
       (this.order = order),
       (this._id = _id);
   }
@@ -17,29 +17,23 @@ class User {
   }
 
   add2Cart(product) {
-    // so what is the problem? this.cart is not the one from the database ? it is
     let flag = 0,
       cart = '';
     for (const p of this.cart.items) {
       if (p._id.toString() === product._id.toString()) {
-        // if product is in cart
         ++flag;
         p.quantity += 1;
-        this.cart.total += +p.price;
       }
     }
     if (!flag) {
-      // if product is not in cart
       cart = {
-        items: [...this.cart.items, { ...product, quantity: 1 }],
-        total: this.cart.total
-          ? (this.cart.total += +product.price)
-          : +product.price,
+        items: [
+          ...this.cart.items,
+          { _id: new BSON.ObjectId(product._id), quantity: 1 },
+        ],
       };
       this.cart = cart;
     } else cart = this.cart;
-    console.log('total: ', this.cart.total);
-    /////////////////////////////////////// update to mongodb
     const db = getDb();
     db.collection('users').updateOne(
       { _id: this._id },
@@ -47,15 +41,52 @@ class User {
     );
   }
 
-  addOrder() {
-    this.order[this.order.length] = {
-      items: [...this.cart.items],
-      total: this.cart.total,
-    };
-    this.cart = {items: [], total: 0}
+  getCart() {
     const db = getDb();
-    console.log(this)
-    db.collection('users').updateOne({_id: this._id}, {$set: this});
+    return db
+      .collection('products')
+      .find({
+        _id: {
+          $in: this.cart.items.map((item) => new BSON.ObjectId(item._id)),
+        },
+      })
+      .toArray()
+      .then((products) => {
+        return products.map((item) => {
+          let qty;
+          for (let i of this.cart.items) {
+            if (i._id.toString() === item._id.toString()) {
+              qty = i.quantity;
+            }
+          }
+          return {
+            product: item,
+            quantity: qty,
+          };
+        });
+      });
+  }
+
+  removeItem(productId) {
+    const db = getDb();
+    db.collection('users').deleteOne({ _id: new BSON.ObjectId(productId) });
+  }
+
+  addOrder() {
+    this.getCart()
+      .then((cart) => {
+        return {products: cart, date: new Date()};
+      })
+      .then((order) => (this.order[this.order.length] = order))
+      .then(() => (this.cart = { items: [], total: 0 }))
+      .then(() => {
+        const db = getDb();
+        db.collection('users').updateOne({ _id: this._id }, { $set: this });
+      });
+  }
+
+  getOrder() {
+    return this.order;
   }
 
   static findById(id) {

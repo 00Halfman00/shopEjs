@@ -9,29 +9,29 @@
     <div class="grid grid-orders">
       <% if (orders[0]) {%>
       <ul>
-        <% for(let order of orders) {%>
+        <% for(const order of orders) {%>
           <li>
             <% total = 0 %>
             <div class="card-container" style="background-color: green;">
-              <p class="product-total" style="background-color: green; color: white">Order</p>
+              <p class="product-total" style="background-color: green; color: white">ORDER: <%=order.date.toDateString()%></p>
             </div>
             <ul>
-              <% for(let product of order.items) {%>
+              <% for(const product of order.products) {%>
                 <li>
-                  <% total += +product.price * +product.quantity%>
+                  <% total += +product.product.price * +product.quantity%>
                   <article class="card-container">
                     <header class="card">
-                      <h2 class="product-title"><%= product.title[0].toUpperCase() + product.title.slice(1) %></h2>
+                      <h2 class="product-title"><%= product.product.title[0].toUpperCase() + product.product.title.slice(1) %></h2>
                     </header>
                     <div class="card-cotrols">
-                      <img src=<%= product.image%> alt="a project image"></ing>
+                      <img src=<%= product.product.image%> alt="a project image"></ing>
                     </div>
                     <div class="card">
-                      <p class="product-price">$<%=product.price%></p>
+                      <p class="product-price">$<%=product.product.price%></p>
                       <p class="product-price">Qty: (<%=product.quantity%>)</p>
                     </div>
                     <div class="card description">
-                      <p class="product-description"><%= product.description %></p>
+                      <p class="product-description"><%= product.product.description %></p>
                     </div>
                   </article>
                 </li>

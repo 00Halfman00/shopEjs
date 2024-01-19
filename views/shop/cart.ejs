@@ -8,27 +8,30 @@
   <form class="order-btn-container" action="/orders" method="POST">
    <button class="order-btn" type="submit">Place Orders</button>
   </form>
-  <main class="main-main">
-    <div class="grid">
-      <% if (cart.length > 0) {%>
-      <% for(let product of cart) {%>
+  <main class="main-main main-orders">
+    <div class="grid grid-orders">
+      <div class="card-container" style="background-color: firebrick;">
+        <p class="product-total" style="background-color: firebrick; color: white"><%=pageTitle%> <%=cart[1] ? 'Items' : 'Item'%></p>
+      </div>
+      <% if (cart[0]) {%>
+      <% for(let item of cart) {%>
         <article class="card-container">
           <header class="card">
-            <h2 class="product-title"><%= product.title[0].toUpperCase() + product.title.slice(1) %></h2>
+            <h2 class="product-title"><%= item.product.title[0].toUpperCase() + item.product.title.slice(1) %></h2>
           </header>
           <div class="card-cotrols">
-            <img src=<%= product.image%> alt="a project image"></ing>
+            <img src=<%= item.product.image%> alt="a project image"></ing>
           </div>
           <div class="card">
-            <p class="product-price">$<%=product.price%></p>
-            <p class="product-price">Qty: (<%=product.quantity%>)</p>
+            <p class="product-price">$<%=item.product.price%></p>
+            <p class="product-price">Qty: (<%=item.quantity%>)</p>
           </div>
           <div class="card description">
-            <p class="product-description"><%= product.description %></p>
+            <p class="product-description"><%= item.product.description %></p>
           </div>
           <div class="card-controls btns">
-            <a class="details-btn" href="/products/<%=product._id%>">Details</a>
-            <%-include('../templates/buttons.ejs', {product: product})%>
+            <a class="details-btn" href="/products/<%=item.product._id%>">Details</a>
+            <%-include('../templates/buttons.ejs', {product: item.product})%>
           </div>
         </article>
       <% } %>
