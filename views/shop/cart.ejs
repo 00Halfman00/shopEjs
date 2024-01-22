@@ -6,7 +6,7 @@
     <p class="user-email"><%=user.email%> </p>
   </div>
   <form class="order-btn-container" action="/orders" method="POST">
-   <button class="order-btn" type="submit">Place Orders</button>
+   <button class="order-btn" type="submit" >Place Order</button>
   </form>
   <main class="main-main main-orders">
     <div class="grid grid-orders">
@@ -17,7 +17,7 @@
       <% for(let item of cart) {%>
         <article class="card-container">
           <header class="card">
-            <h2 class="product-title"><%= item.product.title[0].toUpperCase() + item.product.title.slice(1) %></h2>
+            <h2 class="product-title"><%= item.product.title %></h2>
           </header>
           <div class="card-cotrols">
             <img src=<%= item.product.image%> alt="a project image"></ing>

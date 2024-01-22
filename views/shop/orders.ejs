@@ -16,28 +16,28 @@
               <p class="product-total" style="background-color: green; color: white">ORDER: <%=order.date.toDateString()%></p>
             </div>
             <ul>
-              <% for(const product of order.products) {%>
+              <% for(const item of order.items) {%>
                 <li>
-                  <% total += +product.product.price * +product.quantity%>
+                  <% total += +item.product.price * +item.quantity%>
                   <article class="card-container">
                     <header class="card">
-                      <h2 class="product-title"><%= product.product.title[0].toUpperCase() + product.product.title.slice(1) %></h2>
+                      <h2 class="product-title"><%=item.product.title%></h2>
                     </header>
                     <div class="card-cotrols">
-                      <img src=<%= product.product.image%> alt="a project image"></ing>
+                      <img src=<%=item.product.image%> alt="a project image"></ing>
                     </div>
                     <div class="card">
-                      <p class="product-price">$<%=product.product.price%></p>
-                      <p class="product-price">Qty: (<%=product.quantity%>)</p>
+                      <p class="product-price">$<%=item.product.price%></p>
+                      <p class="product-price">Qty: (<%=item.quantity%>)</p>
                     </div>
                     <div class="card description">
-                      <p class="product-description"><%= product.product.description %></p>
+                      <p class="product-description"><%= item.product.description %></p>
                     </div>
                   </article>
                 </li>
               <% } %>
             </ul>
-            <div class="card-container">
+            <div class="card-container total">
               <div class="grid" >
                 <p class="product-total">total:</p>
                 <p class="product-total">$<%=total%></p>

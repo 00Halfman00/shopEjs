@@ -2,12 +2,11 @@ const { BSON } = require('mongodb');
 const { getDb } = require('../utils/database');
 
 class User {
-  constructor(firstName, lastName, email, cart, order, _id) {
+  constructor(firstName, lastName, email, cart, _id) {
     (this.firstName = firstName),
       (this.lastName = lastName),
       (this.email = email),
       (this.cart = cart),
-      (this.order = order),
       (this._id = _id);
   }
 
@@ -35,10 +34,9 @@ class User {
       this.cart = cart;
     } else cart = this.cart;
     const db = getDb();
-    db.collection('users').updateOne(
-      { _id: this._id },
-      { $set: { cart: cart } }
-    );
+    return db
+      .collection('users')
+      .updateOne({ _id: this._id }, { $set: { 'cart.items': cart.items } });
   }
 
   getCart() {
@@ -68,25 +66,37 @@ class User {
   }
 
   removeItem(productId) {
+    this.cart.items = this.cart.items.filter(
+      (item) => item._id.toString() !== productId
+    );
     const db = getDb();
-    db.collection('users').deleteOne({ _id: new BSON.ObjectId(productId) });
+    // return db.collection('users').updateOne({ _id: this._id }, { $set: this }); // different way of getting the same result
+    return db
+      .collection('users')
+      .updateOne(
+        { _id: this._id },
+        { $pull: { 'cart.items': { _id: new BSON.ObjectId(productId) } } }
+      );
   }
 
   addOrder() {
-    this.getCart()
-      .then((cart) => {
-        return {products: cart, date: new Date()};
-      })
-      .then((order) => (this.order[this.order.length] = order))
-      .then(() => (this.cart = { items: [], total: 0 }))
-      .then(() => {
-        const db = getDb();
-        db.collection('users').updateOne({ _id: this._id }, { $set: this });
-      });
+    const db = getDb();
+    return this.getCart().then((cart) => {
+      return db
+        .collection('orders')
+        .insertOne({ userId: this._id, items: cart, date: new Date() })
+        .then(() => {
+          this.cart = { items: [], total: 0 };
+          return db
+            .collection('users')
+            .updateOne({ _id: this._id }, { $set: this });
+        });
+    });
   }
 
-  getOrder() {
-    return this.order;
+  getOrders() {
+    const db = getDb();
+    return db.collection('orders').find({ userId: this._id }).toArray();
   }
 
   static findById(id) {
@@ -99,3 +109,4 @@ class User {
 }
 
 module.exports = User;
+

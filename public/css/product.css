@@ -34,6 +34,9 @@ hr {
   min-width:100%;
   justify-content:space-around;
 }
+.card-container.total {
+  background-color: khaki;
+}
 
 .grid-orders {
   flex-direction: column;

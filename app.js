@@ -26,7 +26,6 @@ db.then(() => {
         user.lastName,
         user.email,
         user.cart,
-        user.order,
         user._id
       );
     }
@@ -36,10 +35,10 @@ db.then(() => {
         'Rambo',
         '00johnrambo00@somesome.com',
         { items: [], total: 0 },
-        []
-      ); // so the plan is to add carts to the emty array and each cart is an order
-      user.insert(); // but with quantity and a total. In that case, might as well have total in cart too
-      return user; // and just get cart and add it untouched
+
+      );
+      user.insert();
+      return user;
     }
     return user;
   })

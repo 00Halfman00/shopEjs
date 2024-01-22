@@ -5,16 +5,19 @@ exports.getHome = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  req.user.addOrder();
-  res.redirect('/');
+  if (req.user.cart.items[0]) {
+    req.user.addOrder().then(() => res.redirect('/orders'));
+  }
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', {
-    pageTitle: 'Orders',
-    user: req.user,
-    orders: req.user.getOrder(),
-    total: 0,
+  req.user.getOrders().then((orders) => {
+    res.render('shop/orders', {
+      pageTitle: 'Orders',
+      user: req.user,
+      orders: orders,
+      total: 0,
+    });
   });
 };
 
@@ -32,9 +35,10 @@ exports.getCart = (req, res, next) => {
           cart: cart,
           user: req.user,
           create: req.user,
+          false: false,
+          true: true,
         });
       });
-
   } catch (err) {
     throw new Error(err);
   }
@@ -48,8 +52,9 @@ exports.postCart = async (req, res, next) => {
       req.user.add2Cart(product);
       res.status(201).redirect('/products');
     } else {
-      req.user.removeItem(productId);
-      res.status(200).redirect('/cart');
+      req.user
+        .removeItem(productId)
+        .then(() => res.status(200).redirect('/cart'));
     }
   } catch (err) {
     throw new Error(err);
