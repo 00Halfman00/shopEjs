@@ -16,22 +16,22 @@
               <p class="product-total" style="background-color: green; color: white">ORDER: <%=order.date.toDateString()%></p>
             </div>
             <ul>
-              <% for(const item of order.items) {%>
+              <% for(const item of order.cart.ordered) {%>
                 <li>
-                  <% total += +item.product.price * +item.quantity%>
+                  <% total += +item.product[0].price * +item.quantity%>
                   <article class="card-container">
                     <header class="card">
-                      <h2 class="product-title"><%=item.product.title%></h2>
+                      <h2 class="product-title"><%=item.product[0].title%></h2>
                     </header>
                     <div class="card-cotrols">
-                      <img src=<%=item.product.image%> alt="a project image"></ing>
+                      <img src=<%=item.product[0].image%> alt="a project image"></ing>
                     </div>
                     <div class="card">
-                      <p class="product-price">$<%=item.product.price%></p>
+                      <p class="product-price">$<%=item.product[0].price%></p>
                       <p class="product-price">Qty: (<%=item.quantity%>)</p>
                     </div>
                     <div class="card description">
-                      <p class="product-description"><%= item.product.description %></p>
+                      <p class="product-description"><%= item.product[0].description %></p>
                     </div>
                   </article>
                 </li>

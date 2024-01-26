@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const { db, getDb } = require('./utils/database');
+const { db } = require('./utils/database');
 const User = require('./models/user');
 
 const { adminRoute } = require('./router/admin');
@@ -13,31 +13,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 db.then(() => {
-  const db = getDb();
-  return db
-    .collection('users')
-    .find({ email: '00johnrambo00@somesome.com' })
-    .next();
+  const user = User.where({'email': '00johnrambo00@somesome.com'})
+  return user.findOne()
 })
   .then((user) => {
-    if (user) {
-      user = new User(
-        user.firstName,
-        user.lastName,
-        user.email,
-        user.cart,
-        user._id
-      );
-    }
     if (!user) {
-      user = new User(
-        'John',
-        'Rambo',
-        '00johnrambo00@somesome.com',
-        { items: [], total: 0 },
-
-      );
-      user.insert();
+      user = new User({
+        firstName: 'John',
+        lastName: 'Rambo',
+        email: '00johnrambo00@somesome.com',
+        cart: {items:[]}
+    });
+      user.save();
       return user;
     }
     return user;
