@@ -17,21 +17,21 @@
       <% for(let item of cart) {%>
         <article class="card-container">
           <header class="card">
-            <h2 class="product-title"><%= item.product.title %></h2>
+            <h2 class="product-title"><%= item.productId.title %></h2>
           </header>
           <div class="card-cotrols">
-            <img src=<%= item.product.image%> alt="a project image"></ing>
+            <img src=<%= item.productId.image%> alt="a project image"></ing>
           </div>
           <div class="card">
-            <p class="product-price">$<%=item.product.price%></p>
+            <p class="product-price">$<%=item.productId.price%></p>
             <p class="product-price">Qty: (<%=item.quantity%>)</p>
           </div>
           <div class="card description">
-            <p class="product-description"><%= item.product.description %></p>
+            <p class="product-description"><%= item.productId.description %></p>
           </div>
           <div class="card-controls btns">
-            <a class="details-btn" href="/products/<%=item.product._id%>">Details</a>
-            <%-include('../templates/buttons.ejs', {product: item.product})%>
+            <a class="details-btn" href="/products/<%=item.productId._id%>">Details</a>
+            <%-include('../templates/buttons.ejs', {product: item.productId})%>
           </div>
         </article>
       <% } %>
