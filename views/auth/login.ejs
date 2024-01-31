@@ -1,0 +1,21 @@
+
+<%-include('../templates/head.ejs')%>
+<body>
+  <%-include('../templates/nav.ejs')%>
+  <main class="main-main">
+    <h1 class="page-title"><%=pageTitle%></h1>
+    <form class="product-form" action="/login" method="POST">
+      <div class="product-form__controls">
+        <label class="product-form__title-label" for="email">email</label>
+        <input class="product-form__title-input" type="email" name="email" id="email" %>" >
+      </div>
+      <div class="product-form__controls">
+        <label class="product-form__title-label" for="password">password</label>
+        <input class="product-form__title-input" type="password" name="password" id="password" %>" >
+      </div>
+      <div class="product-form__controls">
+        <button class="product-form__btn" type="submit">login</button>
+      </div>
+    </form>
+  </main>
+</body>

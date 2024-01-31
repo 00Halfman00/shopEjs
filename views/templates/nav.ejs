@@ -2,23 +2,60 @@
   <nav class="main-header__nav">
     <ul class="main-header__items-list">
       <li class="main-header__item Home">
-        <a href="/" class= <%= pageTitle === 'Home' ? 'active' : '' %> >Home</a>
-      </li>
-      <li class="main-header__item Cart">
-        <a href="/cart" class= <%= pageTitle === 'Cart' ? 'active' : '' %> >Cart</a>
-      </li>
-      <li class="main-header__item Orders">
-        <a href="/orders" class= <%= pageTitle === 'Orders' ? 'active' : '' %> >Orders</a>
+        <a href="/" class="<%= pageTitle === 'Home' ? 'active' : '' %>"
+          >Home
+        </a>
       </li>
       <li class="main-header__item Products">
-        <a href="/products" class= <%= pageTitle === 'Products' ? 'active' : '' %> >Products</a>
+        <a
+          href="/products"
+          class="<%= pageTitle === 'Products' ? 'active' : '' %>"
+          >Products</a
+        >
+      </li>
+      <% if(isAuthenticated === true){ %>
+      <li class="main-header__item Cart">
+        <a href="/cart" class="<%= pageTitle === 'Cart' ? 'active' : '' %>"
+          >Cart</a
+        >
+      </li>
+      <li class="main-header__item Orders">
+        <a href="/orders" class="<%= pageTitle === 'Orders' ? 'active' : '' %>"
+          >Orders</a
+        >
       </li>
       <li class="main-header__item Add_Product">
-        <a href="/admin/add-product" class= <%= pageTitle === 'Add Product' ? 'active' : '' %> >Add Product</a>
+        <a
+          href="/admin/add-product"
+          class="<%= pageTitle === 'Add Product' ? 'active' : '' %>"
+          >Add Product</a
+        >
       </li>
       <li class="main-header__item Admin_Products">
-        <a href="/admin/admin-products" class= <%= pageTitle === 'Admin Products' ? 'active' : '' %> >Admin Products</a>
+        <a
+          href="/admin/admin-products"
+          class="<%= pageTitle === 'Admin Products' ? 'active' : '' %>"
+          >Admin Products</a
+        >
       </li>
+      <% } %>
+      <li class="main-header__item Login">
+        <a href="/login" class="<%= pageTitle === 'Login' ? 'active' : '' %>"
+          >login</a
+        >
+      </li>
+      <% if(isAuthenticated === true){ %>
+      <li>
+        <form class="main-header__item Logout" action="/logout" method="POST">
+          <button
+            class="<%= pageTitle === 'Login' ? 'active' : '' %>"
+            type="submit"
+          >
+            Logout
+          </button>
+        </form>
+      </li>
+      <% } %>
     </ul>
   </nav>
 </header>

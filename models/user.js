@@ -1,7 +1,6 @@
 const mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 const Order = require('./orders');
-const { BSON } = require('mongodb');
 
 const userSchema = new Schema({
   firstName: {
@@ -43,12 +42,11 @@ userSchema.methods.addToCart = function (productId) {
     cart = {
       items: [
         ...this.cart.items,
-        { productId: new BSON.ObjectId(productId), quantity: 1 },
+        { productId: productId, quantity: 1 },
       ],
     };
     this.cart = cart;
   }
-  console.log('this.cart.items at end: ', this.cart.items);
   return this.save();
 };
 
@@ -60,18 +58,25 @@ userSchema.methods.removeItem = function (productId) {
 };
 
 userSchema.methods.addOrder = function (user) {
-  if(!user.cart.items[0]) return 'Empty';
+  if (!user.cart.items[0]) return 'Empty';
   return user
     .populate('cart.items.productId')
     .then((user) => {
-      console.log('user.cart.items in order: ', user.cart.items)
       let total = 0;
-      user.cart.items.forEach(
-        (i) => (total += +i.productId.price * +i.quantity)
-      );
+      const products = user.cart.items.map((i) => {
+        total += +i.productId.price * +i.quantity;
+        return {
+          _id: i.productId._id,
+          title: i.productId.title,
+          image: i.productId.image,
+          description: i.productId.description,
+          price: i.productId.price,
+          quantity: i.quantity,
+        };
+      });
       const order = new Order({
-        userId: this._id,
-        cart: { ordered: user.cart.items },
+        userId: user._id,
+        products: products,
         total: total,
         date: new Date(),
       });

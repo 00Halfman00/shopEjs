@@ -2,7 +2,11 @@ const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
   ///////////////////////////////// WORKING WITH MONGOOSE
-  res.render('admin/edit-product', { pageTitle: 'Add Product', edit: false });
+  res.render('admin/edit-product', {
+    pageTitle: 'Add Product',
+    edit: false,
+    isAuthenticated: req.session.isAuthenticated,
+  });
 };
 
 exports.postAddProduct = (req, res, next) => {
@@ -19,7 +23,7 @@ exports.postAddProduct = (req, res, next) => {
       image: image,
       description: description,
       price: price,
-      userId: req.user._id,
+      userId: req.session.user._id,
     });
     product
       .save()
@@ -36,6 +40,7 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: 'Product',
         product: product,
         edit: true,
+        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => console.log(err));
@@ -57,13 +62,14 @@ exports.deleteProduct = (req, res, next) => {
 
 exports.getAdminProducts = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
-  Product.find().where(`${req.user._id} === userId`) //theoretically, get products for a particular admin
-    //.populate('userId')
+  Product.find()
+    .where(`${req.session.user._id} === userId`) //theoretically, get products for a particular admin
     .then((products) => {
       res.status(200).render('admin/products-list', {
         pageTitle: 'Admin Products',
         products: products,
-        user: req.user,
+        user: req.session.user,
+        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => console.log(err));

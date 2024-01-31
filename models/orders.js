@@ -4,26 +4,19 @@ const mongoose = require('mongoose'),
 const orderSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
-  cart: {
-  ordered: [
+  products: [
     {
-      productId: [
-        {
-          _id: { type: Schema.Types.ObjectId, required: true },
-          title: { type: String, required: true },
-          image: { type: String, required: true },
-          description: { type: String, required: true },
-          price: { type: Number, required: true },
-          userId: { type: Schema.Types.ObjectId, required: true },
-        },
-      ],
-      quantity: Number,
+      _id: { type: Schema.Types.ObjectId, required: true },
+      title: { type: String, required: true },
+      image: { type: String, required: true },
+      description: { type: String, required: true },
+      price: { type: Number, required: true },
+      quantity: { type: Number, required: true },
     },
   ],
-},
-
   total: {
     type: Number,
     required: true,
@@ -35,22 +28,3 @@ const orderSchema = new Schema({
 });
 
 module.exports = mongoose.model('Order', orderSchema);
-
-
-// cart: {
-//   ordered: [
-//     {
-//       product: [
-//         {
-//           _id: { type: Schema.Types.ObjectId, required: true },
-//           title: { type: String, required: true },
-//           image: { type: String, required: true },
-//           description: { type: String, required: true },
-//           price: { type: Number, required: true },
-//           userId: { type: Schema.Types.ObjectId, required: true },
-//         },
-//       ],
-//       quantity: Number,
-//     },
-//   ],
-// },

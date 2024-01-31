@@ -4,7 +4,7 @@
   <main class="main-main">
     <h1 class="page-title"><%=pageTitle%></h1>
     <h1 class="page-title">Products for the Holidays</h1>
-    <p class="page-title">user: <%=user.firstName%> <%=user.lastName%></p>
-    <p class="page-title">email: <%=user.email%> </p>
+    <p class="page-title">user: <%=user ? user.firstName : ''%> <%=user ? user.lastName : ''%></p>
+    <p class="page-title">email: <%=user ? user.email : ''%> </p>
   </main>
 </body>

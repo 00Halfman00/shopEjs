@@ -172,6 +172,28 @@ a, .order-btn {
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
 }
 
+.Login>a.active, .Logout>button.active {
+  color: white;
+  font-weight: bold;
+  background-color: darkcyan;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+}
+
+.Login>a:hover, .Logout>button:hover {
+  color: white;
+  font-weight: bold;
+  background-color: darkcyan;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+}
+
+.Logout>button.active:hover {
+  background-color: rgb(110, 109, 109);
+}
+
 .Products {
   color:rgb(2, 88, 248);
 }
@@ -190,6 +212,10 @@ a, .order-btn {
 
 .Orders {
   color:green;
+}
+
+.Login {
+  color: darkcyan
 }
 
 .order-btn-container {
