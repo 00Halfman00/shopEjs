@@ -1,10 +1,11 @@
 <%-include('../templates/head.ejs')%>
 <body>
   <%-include('../templates/nav.ejs')%>
-  <div class="user-info">
-    <p class="user-name"><%=user.firstName%> <%=user.lastName%></p>
-    <p class="user-email"><%=user.email%> </p>
-  </div>
+  <% if(user) { %>
+    <div class="user-info">
+      <p class="user-email"><%=user.email%></p>
+    </div>
+    <% } %>
   <main class="main-main main-orders">
     <div class="grid grid-orders">
       <% if (orders[0]) {%>
@@ -24,7 +25,7 @@
                       <h2 class="product-title"><%=product.title%></h2>
                     </header>
                     <div class="card-cotrols">
-                      <img src=<%=product.image%> alt="a project image"></ing>
+                      <img src=<%=product.image%> alt="a project image">
                     </div>
                     <div class="card">
                       <p class="product-price"><%=convert(product.price)%></p>

@@ -2,9 +2,14 @@
 <body>
   <%-include('../templates/nav.ejs')%>
   <main class="main-main">
-    <h1 class="page-title"><%=pageTitle%></h1>
+    <% if(user) { %>
+    <div class="user-info">
+      <p class="user-email"><%=user.email%></p>
+    </div>
+    <% } %>
+    <div class="card-container" style="background-color: rgb(243, 182, 27);">
+      <p class="product-total" style="background-color: rgb(243, 182, 27); color: white"><%=pageTitle%></p>
+    </div>
     <h1 class="page-title">Products for the Holidays</h1>
-    <p class="page-title">user: <%=user ? user.firstName : ''%> <%=user ? user.lastName : ''%></p>
-    <p class="page-title">email: <%=user ? user.email : ''%> </p>
   </main>
 </body>

@@ -1,6 +1,9 @@
 <%-include('../templates/head.ejs')%>
 <body>
   <%-include('../templates/nav.ejs')%>
+  <div class="user-info">
+    <p class="user-email"><%=user.email%> </p>
+  </div>
   <main class="main-main">
     <h1 class="page-title"><%=pageTitle%></h1>
     <form class="product-form" action="/admin/<%= edit === true ? 'edit-product/'+product._id : 'add-product' %>" method="POST">

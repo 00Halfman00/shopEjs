@@ -1,3 +1,4 @@
+const { request } = require('express');
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
@@ -5,6 +6,7 @@ exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     edit: false,
+    user: req.session.user,
     isAuthenticated: req.session.isAuthenticated,
   });
 };
@@ -40,6 +42,7 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: 'Product',
         product: product,
         edit: true,
+        user: req.session.user,
         isAuthenticated: req.session.isAuthenticated,
       });
     })
@@ -62,7 +65,8 @@ exports.deleteProduct = (req, res, next) => {
 
 exports.getAdminProducts = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
-  Product.find()
+  if(req.session.user){
+    Product.find()
     .where(`${req.session.user._id} === userId`) //theoretically, get products for a particular admin
     .then((products) => {
       res.status(200).render('admin/products-list', {
@@ -73,4 +77,7 @@ exports.getAdminProducts = (req, res, next) => {
       });
     })
     .catch((err) => console.log(err));
+  } else {
+    res.redirect('/')
+  }
 };

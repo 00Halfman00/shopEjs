@@ -39,16 +39,22 @@
         >
       </li>
       <% } %>
-      <li class="main-header__item Login">
-        <a href="/login" class="<%= pageTitle === 'Login' ? 'active' : '' %>"
-          >login</a
-        >
-      </li>
-      <% if(isAuthenticated === true){ %>
+      <% if(!isAuthenticated){ %>
+        <li class="main-header__item Login">
+          <a href="/Signup" class="<%= pageTitle === 'Signup' ? 'active' : '' %>"
+            >Signup</a
+          >
+        </li>
+        <li class="main-header__item Login">
+          <a href="/login" class="<%= pageTitle === 'Login' ? 'active' : '' %>"
+            >login</a
+          >
+        </li>
+      <% } else { %>
       <li>
         <form class="main-header__item Logout" action="/logout" method="POST">
           <button
-            class="<%= pageTitle === 'Login' ? 'active' : '' %>"
+            class="logout"
             type="submit"
           >
             Logout

@@ -28,7 +28,7 @@ exports.getOrders = (req, res, next) => {
   Order.find({ userId: req.session.user._id }).then((orders) => {
     res.render('shop/orders', {
       pageTitle: 'Orders',
-      user: req.session.user || {firstName: '', lastName: '', email: ''},
+      user: req.session.user,
       orders: orders,
       total: 0,
       convert: currencyFormat,
@@ -79,6 +79,7 @@ exports.getProduct = (req, res, next) => {
       res.render('shop/product', {
         pageTitle: 'Product',
         product: product,
+        user: req.session.user,
         isAuthenticated: req.session.isAuthenticated,
       })
     )

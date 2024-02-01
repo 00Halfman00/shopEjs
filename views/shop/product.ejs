@@ -1,6 +1,11 @@
 <%-include('../templates/head.ejs')%>
 <body>
   <%-include('../templates/nav.ejs')%>
+  <% if(user) { %>
+    <div class="user-info">
+      <p class="user-email"><%=user.email%></p>
+    </div>
+    <% } %>
   <article class="card-container">
     <header class="card">
       <h2 class="product-title"><%= product.title %></h2>
@@ -15,7 +20,9 @@
       <p class="product-description"><%= product.description %></p>
     </div>
     <div class="card-controls btns">
-     <%-include('../templates/buttons.ejs')%>
+      <% if(isAuthenticated) { %>
+        <%-include('../templates/buttons.ejs', {product: product})%>
+      <% } %>
     </div>
   </article>
 </body>

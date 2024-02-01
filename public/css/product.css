@@ -1,12 +1,6 @@
 .page-title {
   margin: 1rem;
 }
-.user-info {
-  margin: 1rem;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-}
 
 hr {
   margin: 1rem;

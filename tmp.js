@@ -48,3 +48,14 @@
     userId: ObjectId('65ac52398a25e380c35e03ed')
   }
 ]
+
+
+// .then(() => {
+//   const user = new User({
+//     firstName: 'John',
+//     lastName: 'Rambo',
+//     email: '00johnrambo00@somesome.com',
+//     cart: {items: []}
+//   })
+//   user.save();
+// })

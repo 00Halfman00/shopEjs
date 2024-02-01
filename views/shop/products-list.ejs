@@ -1,10 +1,11 @@
 <%-include('../templates/head.ejs')%>
   <body>
     <%-include('../templates/nav.ejs')%>
-    <div class="user-info">
-      <p class="page-title">user: <%=user ? user.firstName : ''%> <%=user ? user.lastName : ''%></p>
-    <p class="page-title">email: <%=user ? user.email : ''%> </p>
-    </div>
+    <% if(user) { %>
+      <div class="user-info">
+        <p class="user-email"><%=user.email%></p>
+      </div>
+      <% } %>
     <main class="main-main">
       <div class="grid">
         <% if (products.length > 0) {%>
@@ -24,7 +25,9 @@
             </div>
             <div class="card-controls btns">
               <a class="details-btn" href="/products/<%=product._id%>">Details</a>
-              <%-include('../templates/buttons.ejs', {product: product})%>
+              <% if(isAuthenticated) { %>
+                <%-include('../templates/buttons.ejs', {product: product})%>
+              <% } %>
             </div>
           </article>
         <% } %>

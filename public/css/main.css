@@ -55,7 +55,7 @@ h1 {
   margin:0;
 }
 
-a, .order-btn {
+a, .order-btn, .Logout>button {
   color: inherit;
   margin: 0.3rem;
   padding-top: 0.5rem;
@@ -181,6 +181,12 @@ a, .order-btn {
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
 }
 
+.Logout {
+  margin:0;
+  padding:0;
+  color: darkcyan;
+}
+
 .Login>a:hover, .Logout>button:hover {
   color: white;
   font-weight: bold;
@@ -190,8 +196,17 @@ a, .order-btn {
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
 }
 
-.Logout>button.active:hover {
-  background-color: rgb(110, 109, 109);
+.logout {
+  color: darkcyan;
+  border: none;
+  background-color: transparent;
+}
+
+.user-info {
+  margin: 1rem;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .Products {
