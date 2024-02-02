@@ -246,7 +246,11 @@ a, .order-btn, .Logout>button {
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
 }
 
-
+.note{
+  padding: 1rem;
+  color: darkcyan;
+  font-weight:bold;
+}
 
 @media (max-width: 700px) {
  .page-title {

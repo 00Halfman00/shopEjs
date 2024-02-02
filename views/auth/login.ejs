@@ -3,7 +3,14 @@
 <body>
   <%-include('../templates/nav.ejs')%>
   <main class="main-main">
-    <h1 class="page-title"><%=pageTitle%></h1>
+    <div class="card-container" style="background-color: darkcyan;">
+      <p class="product-total" style="background-color: darkcyan; color: white"><%=pageTitle%></p>
+    </div>
+    <%if(note) { %>
+    <div class="note">
+      <p><%=note%></p>
+    </div>
+    <% } %>
     <form class="product-form" action="<%=pageTitle === 'Login' ? '/login' : '/signup'%>" method="POST">
       <div class="product-form__controls">
         <label class="product-form__title-label" for="email">email</label>
