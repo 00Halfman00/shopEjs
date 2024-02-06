@@ -1,4 +1,3 @@
-const { request } = require('express');
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
@@ -7,7 +6,6 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: 'Add Product',
     edit: false,
     user: req.session.user,
-    isAuthenticated: req.session.isAuthenticated,
   });
 };
 
@@ -43,7 +41,6 @@ exports.getEditProduct = (req, res, next) => {
         product: product,
         edit: true,
         user: req.session.user,
-        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => console.log(err));
@@ -73,7 +70,6 @@ exports.getAdminProducts = (req, res, next) => {
         pageTitle: 'Admin Products',
         products: products,
         user: req.session.user,
-        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => console.log(err));

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {valid} = require('../utils/valid')
 
 const {
   getProducts,
@@ -14,10 +15,10 @@ const {
 
 router.get('/products', getProducts);
 router.get('/product', getProduct)
-router.get('/cart', getCart);
-router.post('/cart', postCart);
-router.get('/orders', getOrders);
-router.post('/orders', postOrder);
+router.get('/cart', valid, getCart);
+router.post('/cart', valid, postCart);
+router.get('/orders', valid, getOrders);
+router.post('/orders', valid, postOrder);
 router.get('/products/:productId', getProduct);
 router.get('/', getHome);
 

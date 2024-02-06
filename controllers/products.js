@@ -6,8 +6,7 @@ const currencyFormat = require('../utils/currency');
 exports.getHome = (req, res, next) => {
   res.render('shop/home', {
     pageTitle: 'Home',
-    user: req.session.user || req.user,
-    isAuthenticated: req.session.isAuthenticated || false,
+    user: req.session.user,
   });
 };
 
@@ -32,7 +31,6 @@ exports.getOrders = (req, res, next) => {
       orders: orders,
       total: 0,
       convert: currencyFormat,
-      isAuthenticated: req.session.isAuthenticated,
     });
   });
 };
@@ -45,11 +43,10 @@ exports.getCart = (req, res, next) => {
       res.status(200).render('shop/cart', {
         pageTitle: 'Cart',
         cart: user.cart.items,
-        user: req.session.user || req.user,
+        user: req.session.user,
         create: req.user,
         false: false,
         true: true,
-        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => console.log(err));
@@ -74,16 +71,19 @@ exports.postCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   ///////////////////////////////// WORKING WITH MONGOOSE
-  Product.findById(req.params.productId)
-    .then((product) =>
-      res.render('shop/product', {
-        pageTitle: 'Product',
-        product: product,
-        user: req.session.user,
-        isAuthenticated: req.session.isAuthenticated,
-      })
-    )
-    .catch((err) => console.log(err));
+  if (req.params.productId) {
+    Product.findById(req.params.productId)
+      .then((product) =>
+        res.render('shop/product', {
+          pageTitle: 'Product',
+          product: product,
+          user: req.session.user,
+        })
+      )
+      .catch((err) => console.log(err));
+  } else {
+    res.redirect('/');
+  }
 };
 
 exports.getProducts = (req, res, next) => {
@@ -94,7 +94,6 @@ exports.getProducts = (req, res, next) => {
         pageTitle: 'Products',
         products: products,
         user: req.session.user,
-        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => console.log(err));

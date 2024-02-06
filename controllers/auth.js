@@ -6,7 +6,6 @@ exports.getLogin = (req, res, next) => {
     pageTitle: 'Login',
     user: req.session.user,
     note: false,
-    isAuthenticated: req.session.isAuthenticated,
   });
 };
 
@@ -16,24 +15,25 @@ exports.postLogin = (req, res, next) => {
     User.findOne({ email: email })
       .then((user) => {
         if (!user) {
-          const note = 'USER NOT FOUND';
           res.render('auth/login', {
             pageTitle: 'Login',
-            note: note,
-            isAuthenticated: req.session.isAuthenticated,
+            note: 'USER NOT FOUND',
           });
-        }
-        if(user){
-          return bcrypt
-          .compare(password, user.password)
-          .then(() => {
-            req.session.isAuthenticated = true;
-            req.session.user = user;
-            req.session.save((err) => {
-              err ? console.log(err) : '';
-              res.redirect('/');
-            });
-          })
+        } else if (user) {
+          return bcrypt.compare(password, user.password).then((match) => {
+            if (match) {
+              req.session.user = user;
+              req.session.save((err) => {
+                err ? console.log(err) : '';
+                res.redirect('/');
+              });
+            } else {
+              res.render('auth/login', {
+                pageTitle: 'Login',
+                note: 'INVALID PASSWORD',
+              });
+            }
+          });
         }
       })
       .catch((err) => console.log(err));
@@ -41,8 +41,10 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.postLogout = (req, res, next) => {
-  req.session.destroy();
-  res.redirect('/');
+  req.session.destroy((err) => {
+    err ? console.log('err: ', err) : '';
+    res.redirect('/');
+  });
 };
 
 exports.getSignup = (req, res, next) => {
@@ -50,7 +52,6 @@ exports.getSignup = (req, res, next) => {
     pageTitle: 'Signup',
     user: req.session.user,
     note: false,
-    isAuthenticated: req.session.isAuthenticated,
   });
 };
 
@@ -60,38 +61,35 @@ exports.postSignup = (req, res, next) => {
     password.trim() &&
     confirmPassword.trim() &&
     password === confirmPassword &&
-    password[0] &&
     password.length > 7 &&
     email.includes('@')
   ) {
-    bcrypt.genSalt(12, function (err, salt) {
-      bcrypt.hash(password, salt, function (err, hash) {
-        User.findOne({ email: email })
-          .then((u) => {
-            if (u) {
-              return false;
-            } else {
+    User.findOne({ email: email })
+      .then((u) => {
+        if (u) {
+          res.render('auth/login', {
+            pageTitle: 'Signup',
+            note: 'USER WITH THAT EMAIL ALREADY EXIST',
+          });
+        } else {
+          bcrypt.genSalt(12, function (err, salt) {
+            bcrypt.hash(password, salt, function (err, hash) {
               const user = new User({
                 password: hash,
                 email: email,
                 cart: { items: [] },
               });
               return user.save();
-            }
-          })
-          .then((user) => {
-            if (user) res.redirect('/login');
-            else {
-              const note = 'USER WITH THAT EMAIL ALREADY EXIST';
-              res.render('auth/login', {
-                pageTitle: 'Signup',
-                note: note,
-                isAuthenticated: req.session.isAuthenticated,
-              });
-            }
-          })
-          .catch((err) => console.log(err));
-      });
+            });
+          });
+        }
+      })
+      .then((user) => res.redirect('/login'))
+      .catch((err) => console.log(err));
+  } else {
+    res.render('auth/login', {
+      pageTitle: 'Signup',
+      note: 'PASSWORDS DO NOT MATCH',
     });
   }
 };

@@ -7,6 +7,7 @@
     </div>
     <% } %>
   <form class="order-btn-container" action="/orders" method="POST">
+    <input type="hidden" name="_csrf" value="<%=csrfToken%>">
    <button class="order-btn" type="submit" >Place Order</button>
   </form>
   <main class="main-main main-orders">

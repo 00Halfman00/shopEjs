@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {valid} = require('../utils/valid');
 
 
 const {
@@ -11,11 +12,11 @@ const {
   deleteProduct
 } = require('../controllers/admin');
 
-router.get('/add-product', getAddProduct);
-router.post('/add-product', postAddProduct);
-router.get('/edit-product/:productId', getEditProduct);
-router.post('/edit-product/:productId', postEditProduct);
-router.get('/admin-products', getAdminProducts);
-router.post('/delete-product', deleteProduct);
+router.get('/add-product', valid, getAddProduct);
+router.post('/add-product', valid, postAddProduct);
+router.get('/edit-product/:productId', valid, getEditProduct);
+router.post('/edit-product/:productId', valid, postEditProduct);
+router.get('/admin-products', valid, getAdminProducts);
+router.post('/delete-product', valid, deleteProduct);
 
 exports.adminRoute = router;

@@ -28,6 +28,7 @@
       <% } %>
       <div class="product-form__controls">
         <button class="product-form__btn" type="submit">
+          <input type="hidden" name="_csrf" value="<%=csrfToken%>">
           <%=pageTitle === "Login" ? "login" : "signup" %>
         </button>
       </div>

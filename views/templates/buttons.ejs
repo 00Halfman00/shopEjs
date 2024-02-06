@@ -2,4 +2,5 @@
   <button class="add-btn" type="submit"><%= pageTitle === "Cart" ? "Delete" : "Add to Cart" %></button>
   <input type="hidden" name="productId" value=<%=product._id%> >
   <input type="hidden" name="pageTitle" value=<%=pageTitle%> >
+  <input type="hidden" name="_csrf" value="<%=csrfToken%>">
 </form>

@@ -2,12 +2,14 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const csurf = require('csurf');
 const { db } = require('./utils/database');
 
 const { adminRoute } = require('./router/admin');
 const { shopRoute } = require('./router/shop');
 const { authRoute } = require('./router/auth');
 const { status404 } = require('./controllers/404');
+const csrf = csurf();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,6 +25,14 @@ db.then((store) => {
     })
   );
 })
+  .then(() => {
+    app.use(csrf);
+    app.use((req, res, next) => {
+      res.locals.csrfToken = req.csrfToken();
+      res.locals.isAuthenticated = req.session.isAuthenticated;
+      next();
+    })
+  })
   .then(() => {
     app.use('/admin', adminRoute);
     app.use(shopRoute);
