@@ -3,6 +3,7 @@ const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const csurf = require('csurf');
+const flash = require('connect-flash');
 const { db } = require('./utils/database');
 
 const { adminRoute } = require('./router/admin');
@@ -27,6 +28,7 @@ db.then((store) => {
 })
   .then(() => {
     app.use(csrf);
+    app.use(flash()); // if problems are rendered instead of redirecting, then this flash is unnecessary
     app.use((req, res, next) => {
       res.locals.csrfToken = req.csrfToken();
       res.locals.isAuthenticated = req.session.isAuthenticated;
