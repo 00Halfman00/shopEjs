@@ -48,32 +48,47 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
-  Product.findByIdAndUpdate(req.body._id, req.body)
-    .then(() => res.status(200).redirect('/admin/admin-products'))
+  const { _id, title, image, description, price } = req.body;
+  Product.findById(_id)
+    .then((product) => {
+      if (
+        product &&
+        product.userId.toString() === req.session.user._id.toString()
+      ) {
+        product.title = title;
+        product.image = image;
+        product.description = description;
+        product.price = price;
+        return product
+          .save()
+          .then(() => res.status(200).redirect('/admin/admin-products'));
+      } else {
+        res.redirect('/');
+      }
+    })
     .catch((err) => console.log(err));
 };
 
 exports.deleteProduct = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
-  Product.deleteOne({ _id: req.body.productId })
+  Product.deleteOne({ _id: req.body.productId, userId: req.session.user._id })
     .then(() => res.status(200).redirect('/admin/admin-products'))
     .catch((err) => console.log(err));
 };
 
 exports.getAdminProducts = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
-  if(req.session.user){
-    Product.find()
-    .where(`${req.session.user._id} === userId`) //theoretically, get products for a particular admin
-    .then((products) => {
-      res.status(200).render('admin/products-list', {
-        pageTitle: 'Admin Products',
-        products: products,
-        user: req.session.user,
-      });
-    })
-    .catch((err) => console.log(err));
+  if (req.session.user) {
+    Product.find({ userId: req.session.user._id })
+      .then((products) => {
+        res.status(200).render('admin/products-list', {
+          pageTitle: 'Admin Products',
+          products: products,
+          user: req.session.user,
+        });
+      })
+      .catch((err) => console.log(err));
   } else {
-    res.redirect('/')
+    res.redirect('/');
   }
 };
