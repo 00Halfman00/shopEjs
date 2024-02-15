@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const csurf = require('csurf');
 const flash = require('connect-flash');
 const { db } = require('./utils/database');
+const https = require('https');
+const fs = require('fs');
 
 const { adminRoute } = require('./router/admin');
 const { shopRoute } = require('./router/shop');
@@ -41,8 +43,14 @@ db.then((store) => {
     app.use(authRoute);
     app.use(status404);
   })
-  .then(() => {
-    app.listen(3000);
-    console.log('listening on port: 3000');
+  .then(()=> {
+    return {
+      key: fs.readFileSync('../../Desktop/cert/server.key'),
+      cert: fs.readFileSync('../../Desktop/cert/server.crt')
+    }
+  })
+  // .then(app.listen(3000))
+  .then((cert) => {
+    https.createServer(cert, app).listen(443, () => console.log('server is running on port: 443'));
   })
   .catch((err) => console.log(err));

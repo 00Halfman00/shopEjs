@@ -1,18 +1,16 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
-const mailchimp = require('@mailchimp/mailchimp_marketing');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
-mailchimp.setConfig({
-  apiKey: process.env.MAIL,
-  server: 'localhost:3000',
+var transport = nodemailer.createTransport({
+  host: 'sandbox.smtp.mailtrap.io',  // only works for testing emails in development(sandbox)
+  port: 2525,
+  auth: {
+    user: process.env.MAILUSER,
+    pass: process.env.MAILPASS,
+  },
 });
-
-mailchimp.ping
-  .get()
-  .then((response) => console.log('response: ', response))
-  .catch((err) => {
-    err ? console.log('err: ', err) : '';
-  });
 
 exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
@@ -86,7 +84,7 @@ exports.postSignup = (req, res, next) => {
             note: 'USER WITH THAT EMAIL ALREADY EXIST',
           });
         } else {
-          bcrypt.genSalt(12, function (err, salt) {
+          return bcrypt.genSalt(12, function (err, salt) {
             bcrypt.hash(password, salt, function (err, hash) {
               const user = new User({
                 password: hash,
@@ -95,15 +93,118 @@ exports.postSignup = (req, res, next) => {
               });
               return user.save();
             });
+            console.log('email: ', email);
+            res.redirect('/login');
           });
         }
       })
-      .then((user) => (user ? res.redirect('/login') : ''))
+      .then((user) => {
+        user ? res.redirect('/login') : '';
+        return transport
+          .sendMail({
+            from: '"👻" <shop_products.com>',
+            to: email,
+            subject: 'signed up',
+            text: 'Welcome. You are now signed up and can log into account.',
+            html: `
+            <p>We hope you enjoy our products</p>
+          `,
+          })
+          .then((info) => console.log('message send: ', info.messageId));
+      })
       .catch((err) => console.log(err));
   } else {
     res.status(401).render('auth/login', {
       pageTitle: 'Signup',
       note: "INVALID EMAIL OR PASSWORDS DON'T MATCH",
     });
+  }
+};
+
+exports.getReset = (req, res, next) => {
+  res.render('auth/reset', {
+    pageTitle: 'Reset',
+    user: req.session.user,
+    note: req.flash('note')[0],
+  });
+};
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buf) => {
+    err ? console.log(err) : '';
+    const token = buf.toString('hex');
+    `use link to reset password: href=http://localhost:3000/reset/${token}  `;
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (user) {
+          user.resetToken = token;
+          user.resetTokenExp = Date.now() + 1000 * 60 * 60;
+          return user.save();
+        } else {
+          req.flash('note', 'Email was not found.');
+          res.redirect('/reset');
+        }
+      })
+      .then((user) => {
+        if (user) {
+          req.flash('note:', 'Link has been sent to email to reset password');
+          res.redirect('/reset');
+          return transport
+            .sendMail({
+              from: '"👻" <shop_products.com>',
+              to: user.email,
+              subject: 'reset password',
+              html: `<div><p>Click on the link: <a href="https://localhost/reset/${token}"}>link</a> to reset password</p></div>`,
+            })
+            .then((info) => console.log('message send: ', info.messageId));
+        }
+      })
+      .catch((err) => (err ? console.log(err) : ''));
+  });
+};
+
+exports.getSetPassword = (req, res, next) => {
+  token = req.params.resetToken;
+  User.findOne({ resetToken: token, resetTokenExp: { $gte: Date.now() } })
+    .then((user) => {
+      if (user) {
+        res.render('auth/set-password', {
+          pageTitle: 'New Password',
+          userId: user.id.toString(),
+          passwordToken: token,
+          note: req.flash('note')[0],
+        });
+      }
+    })
+    .catch((err => err ? console.log(err) : ''));
+};
+
+exports.postSetPassword = (req, res, next) => {
+  const { userId, password, passwordToken } = req.body;
+  console.log('req.body: ', req.body)
+  if (
+    password.trim() &&
+    password.length > 7
+  ) {
+    User.findOne({
+      _id: userId,
+      resetToken: passwordToken,
+      resetTokenExp: { $gte: Date.now() },
+    })
+      .then((user) => {
+        return bcrypt.genSalt(12, function (err, salt) {
+          bcrypt.hash(password, salt, function (err, hash) {
+            user.password = hash;
+            user.resetToken = undefined;
+            user.resetTokenExp = undefined;
+            return user.save();
+          });
+        });
+      })
+      .then(res.redirect('/login'))
+      .catch((err) => (err ? console.log(err) : ''));
+  } else {
+    req.flash('note', 'Invalid password');
+    res.redirect('/reset-password');
   }
 };
