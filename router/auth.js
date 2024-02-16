@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { check, body } = require('express-validator');
+const expressVal = require('express-validator');
+const User = require('../models/user');
 
 const {
   getLogin,
@@ -10,17 +13,61 @@ const {
   getReset,
   postReset,
   getSetPassword,
-  postSetPassword
+  postSetPassword,
 } = require('../controllers/auth');
 
 router.get('/login', getLogin);
-router.post('/login', postLogin);
+router.post(
+  '/login',
+  [
+    check('email').isEmail().withMessage('Please enter a valid Email'),
+    body('password', 'Password must be atleast 7 characters long').isLength({
+      min: 7,
+    }),
+    body('email').custom((value, { req }) => {
+      return User.find({ email: value }).then((user) => {
+        if (!user[0]) {
+          throw new Error('There is no account with that email');
+        }
+        req.body.user = user[0];
+        return true;
+      });
+    }),
+  ],
+  postLogin
+);
 router.post('/logout', postLogout);
 router.get('/signup', getSignup);
-router.post('/signup', postSignup);
+router.post(
+  '/signup',
+  [
+    check('email')
+      .isEmail()
+      .withMessage('Please enter a valid Email')
+      .custom((value, { req }) => {
+        return User.find({ email: value }).then((user) => {
+          if (user[0]) {
+            console.log('user: ', user)
+            throw new Error('User with that email already exist');
+          }
+          return true
+        });
+      }),
+    body('password', 'Password must be atleast 7 characters long').isLength({
+      min: 7,
+    }),
+    body('confirmPassword').custom((value, { req }) => {
+      if (req.body.password !== value) {
+        throw new Error('Passwords need to match');
+      }
+      return true;
+    }),
+  ],
+  postSignup
+);
 router.get('/reset', getReset);
-router.post('/reset', postReset)
-router.get('/reset/:resetToken', getSetPassword)
-router.post('/set-password', postSetPassword)
+router.post('/reset', postReset);
+router.get('/reset/:resetToken', getSetPassword);
+router.post('/set-password', postSetPassword);
 
 exports.authRoute = router;

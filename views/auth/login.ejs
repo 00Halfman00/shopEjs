@@ -11,7 +11,7 @@
       <p><%=note%></p>
     </div>
     <% } %>
-    <form class="product-form" action="<%=pageTitle === 'Login' ? '/login' : '/signup'%>" method="POST">
+    <form class="product-form" action="<%=pageTitle === 'Login' ? '/login' : '/signup'%>" method="POST" novalidate>
       <div class="product-form__controls">
         <label class="product-form__title-label" for="email">email</label>
         <input class="product-form__title-input" type="email" name="email" id="email" %>" >

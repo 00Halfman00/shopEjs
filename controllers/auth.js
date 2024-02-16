@@ -2,9 +2,10 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const { validationResult } = require('express-validator');
 
 var transport = nodemailer.createTransport({
-  host: 'sandbox.smtp.mailtrap.io',  // only works for testing emails in development(sandbox)
+  host: 'sandbox.smtp.mailtrap.io', // only works for testing emails in development(sandbox)
   port: 2525,
   auth: {
     user: process.env.MAILUSER,
@@ -21,34 +22,27 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  const { email, password } = req.body;
-  if (email.includes('@') && email.trim()[0] && password.trim()[0]) {
-    User.findOne({ email: email })
-      .then((user) => {
-        if (!user) {
-          // when there is a problem, render seems to be the better option; with success, redirect
-          req.flash('note', 'USER NOT FOUND');
-          res.redirect('/login');
-        } else if (user) {
-          return bcrypt.compare(password, user.password).then((match) => {
-            if (match) {
-              req.session.isAuthenticated = true;
-              req.session.user = user;
-              req.session.save((err) => {
-                err ? console.log(err) : '';
-                res.redirect('/');
-              });
-            } else {
-              req.flash('note', 'INVALID PASSWORD');
-              res.redirect('/login');
-            }
-          });
-        }
-      })
-      .catch((err) => console.log(err));
+  const { password, user } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(422).render('auth/login', {
+      pageTitle: 'Login',
+      note: errors.array()[0].msg,
+    });
   } else {
-    req.flash('note', 'INVALID EMAIL OR PASSWORD');
-    res.redirect('/login');
+    return bcrypt.compare(password, user.password).then((match) => {
+      if (match) {
+        req.session.isAuthenticated = true;
+        req.session.user = user;
+        req.session.save((err) => {
+          err ? console.log(err) : '';
+          res.redirect('/');
+        });
+      } else {
+        req.flash('note', 'Invalid password');
+        res.redirect('/login');
+      }
+    });
   }
 };
 
@@ -68,55 +62,36 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-  const { email, password, confirmPassword } = req.body;
-  if (
-    password.trim() &&
-    confirmPassword.trim() &&
-    password === confirmPassword &&
-    password.length > 7 &&
-    email.includes('@')
-  ) {
-    User.findOne({ email: email })
-      .then((u) => {
-        if (u) {
-          res.status(409).render('auth/login', {
-            pageTitle: 'Signup',
-            note: 'USER WITH THAT EMAIL ALREADY EXIST',
-          });
-        } else {
-          return bcrypt.genSalt(12, function (err, salt) {
-            bcrypt.hash(password, salt, function (err, hash) {
-              const user = new User({
-                password: hash,
-                email: email,
-                cart: { items: [] },
-              });
-              return user.save();
-            });
-            console.log('email: ', email);
-            res.redirect('/login');
-          });
-        }
-      })
-      .then((user) => {
-        user ? res.redirect('/login') : '';
-        return transport
-          .sendMail({
-            from: '"👻" <shop_products.com>',
-            to: email,
-            subject: 'signed up',
-            text: 'Welcome. You are now signed up and can log into account.',
-            html: `
+  const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  if (errors.isEmpty()) {
+    return bcrypt.genSalt(12, function (err, salt) {
+      bcrypt.hash(password, salt, function (err, hash) {
+        const user = new User({
+          password: hash,
+          email: email,
+          cart: { items: [] },
+        });
+        return user.save();
+      });
+
+      res.redirect('/login');
+      transport.sendMail({
+        from: '"👻" <shop_products.com>',
+        to: email,
+        subject: 'signed up',
+        text: 'Welcome. You are now signed up and can log into account.',
+        html: `
             <p>We hope you enjoy our products</p>
           `,
-          })
-          .then((info) => console.log('message send: ', info.messageId));
-      })
-      .catch((err) => console.log(err));
+      });
+    });
   } else {
-    res.status(401).render('auth/login', {
+    res.render('auth/login', {
       pageTitle: 'Signup',
-      note: "INVALID EMAIL OR PASSWORDS DON'T MATCH",
+      user: req.session.user,
+      note: errors.array()[0].msg,
     });
   }
 };
@@ -176,16 +151,13 @@ exports.getSetPassword = (req, res, next) => {
         });
       }
     })
-    .catch((err => err ? console.log(err) : ''));
+    .catch((err) => (err ? console.log(err) : ''));
 };
 
 exports.postSetPassword = (req, res, next) => {
   const { userId, password, passwordToken } = req.body;
-  console.log('req.body: ', req.body)
-  if (
-    password.trim() &&
-    password.length > 7
-  ) {
+  console.log('req.body: ', req.body);
+  if (password.trim() && password.length > 7) {
     User.findOne({
       _id: userId,
       resetToken: passwordToken,
@@ -208,3 +180,55 @@ exports.postSetPassword = (req, res, next) => {
     res.redirect('/reset-password');
   }
 };
+
+// exports.postSignup = (req, res, next) => {
+//   const { email, password } = req.body;
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     console.log('invalid email: ', errors.array()[0].msg);
+//   } else console.log('is valid email: ', errors.array());
+//   if (errors.isEmpty()) {
+//     return User.findOne({ email: email })
+//       .then((u) => {
+//         if (u) {
+//           res.status(409).render('auth/login', {
+//             pageTitle: 'Signup',
+//             note: 'USER WITH THAT EMAIL ALREADY EXIST',
+//           });
+//         } else {
+//           return bcrypt.genSalt(12, function (err, salt) {
+//             bcrypt.hash(password, salt, function (err, hash) {
+//               const user = new User({
+//                 password: hash,
+//                 email: email,
+//                 cart: { items: [] },
+//               });
+//               return user.save();
+//             });
+//             console.log('email: ', email);
+//             res.redirect('/login');
+//           });
+//         }
+//       })
+//       .then((user) => {
+//         user ? res.redirect('/login') : '';
+//         return transport
+//           .sendMail({
+//             from: '"👻" <shop_products.com>',
+//             to: email,
+//             subject: 'signed up',
+//             text: 'Welcome. You are now signed up and can log into account.',
+//             html: `
+//             <p>We hope you enjoy our products</p>
+//           `,
+//           })
+//           .then((info) => console.log('message send: ', info.messageId));
+//       })
+//       .catch((err) => console.log(err));
+//   } else {
+//     res.status(422).render('auth/login', {
+//       pageTitle: 'Signup',
+//       note: errors.array()[0].msg,
+//     });
+//   }
+// };
