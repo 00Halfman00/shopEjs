@@ -20,10 +20,16 @@ router.get('/login', getLogin);
 router.post(
   '/login',
   [
-    check('email').isEmail().withMessage('Please enter a valid Email'),
-    body('password', 'Password must be atleast 7 characters long').isLength({
-      min: 7,
-    }),
+    check('email')
+      .isEmail()
+      .withMessage('Please enter a valid Email')
+      .normalizeEmail(),
+    body('password', 'Password must be atleast 7 characters long')
+      .isLength({
+        min: 7,
+      })
+      .isAlphanumeric()
+      .trim(),
     body('email').custom((value, { req }) => {
       return User.find({ email: value }).then((user) => {
         if (!user[0]) {
@@ -44,18 +50,22 @@ router.post(
     check('email')
       .isEmail()
       .withMessage('Please enter a valid Email')
+      .normalizeEmail()
       .custom((value, { req }) => {
         return User.find({ email: value }).then((user) => {
           if (user[0]) {
-            console.log('user: ', user)
+            console.log('user: ', user);
             throw new Error('User with that email already exist');
           }
-          return true
+          return true;
         });
       }),
-    body('password', 'Password must be atleast 7 characters long').isLength({
-      min: 7,
-    }),
+    body('password', 'Password must be atleast 7 characters long')
+      .isLength({
+        min: 7,
+      })
+      .isAlphanumeric()
+      .trim(),
     body('confirmPassword').custom((value, { req }) => {
       if (req.body.password !== value) {
         throw new Error('Passwords need to match');

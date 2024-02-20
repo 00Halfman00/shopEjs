@@ -18,16 +18,21 @@ exports.getLogin = (req, res, next) => {
     pageTitle: 'Login',
     user: req.session.user,
     note: req.flash('note')[0],
+    inputMsg: { email: '', password: '' },
+    valErrors: []
   });
 };
 
 exports.postLogin = (req, res, next) => {
-  const { password, user } = req.body;
+  console.log('req.body: ', req.body);
+  const { password, user, email } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(422).render('auth/login', {
       pageTitle: 'Login',
       note: errors.array()[0].msg,
+      inputMsg: { email: email, password: password },
+      valErrors: errors.array()
     });
   } else {
     return bcrypt.compare(password, user.password).then((match) => {
@@ -39,8 +44,12 @@ exports.postLogin = (req, res, next) => {
           res.redirect('/');
         });
       } else {
-        req.flash('note', 'Invalid password');
-        res.redirect('/login');
+        res.status(422).render('auth/login', {
+          pageTitle: 'Login',
+          note: 'Invalid Password',
+          inputMsg: { email: email, password: password },
+          valErrors: [{path: 'password'}]
+        });
       }
     });
   }
@@ -58,13 +67,15 @@ exports.getSignup = (req, res, next) => {
     pageTitle: 'Signup',
     user: req.session.user,
     note: false,
+    inputMsg: { email: '', password: '' },
+    valErrors: []
   });
 };
 
 exports.postSignup = (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
-
+  console.log(errors.array())
   if (errors.isEmpty()) {
     return bcrypt.genSalt(12, function (err, salt) {
       bcrypt.hash(password, salt, function (err, hash) {
@@ -88,10 +99,17 @@ exports.postSignup = (req, res, next) => {
       });
     });
   } else {
+    console.log
     res.render('auth/login', {
       pageTitle: 'Signup',
       user: req.session.user,
       note: errors.array()[0].msg,
+      inputMsg: {
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      },
+      valErrors: errors.array()
     });
   }
 };

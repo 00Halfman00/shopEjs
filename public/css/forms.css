@@ -57,3 +57,12 @@
 .product-form__image-input:focus {
   background-color: khaki;
 }
+
+.invalid {
+background-color: rgb(223, 161, 161);
+}
+
+.warnMsg {
+  color: rgb(206, 130, 130);
+
+}
