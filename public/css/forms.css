@@ -48,21 +48,53 @@
 .product-form__description-textarea:hover,
 .product-form__price-input:hover,
 .product-form__image-input:hover {
-  background-color: khaki;
+  background-color: rgb(225, 245, 225);
 }
 
 .product-form__title-input:focus,
 .product-form__description-textarea:focus,
 .product-form__price-input:focus,
 .product-form__image-input:focus {
-  background-color: khaki;
+  background-color: white;
 }
 
 .invalid {
-background-color: rgb(223, 161, 161);
+background-color: beige;
 }
 
 .warnMsg {
-  color: rgb(206, 130, 130);
+  width: max-content;
+  margin: 1rem;
+  background-color: whitesmoke;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+}
 
+.warnMsgP {
+  width: 25rem;
+  color: firebrick;
+  font-size: large;
+  width: 25rem;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+  padding: 0.5rem;
+  outline: none;
+  background-color: white;
+}
+
+
+.invoice-link {
+  color: blue;
+}
+
+.invoice-link:hover {
+  color: darkcyan;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+  outline: none;
+  background-color: green;
+  color: white;
 }

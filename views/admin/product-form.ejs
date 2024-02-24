@@ -1,0 +1,37 @@
+<%-include('../templates/head.ejs')%>
+<body>
+  <%-include('../templates/nav.ejs')%>
+  <div class="user-info">
+    <p class="user-email"><%=user.email%> </p>
+  </div>
+  <main class="main-main">
+    <h1 class="page-title"><%=pageTitle%></h1>
+    <%if(note) { %>
+      <div class="note <%=valErrors[0] ? 'warnMsg' : '' %>">
+        <p><%=note%></p>
+      </div>
+    <% } %>
+    <form class="product-form" action="/admin/add-product" method="POST" enctype="multipart/form-data" %>" >
+      <div class="product-form__controls">
+        <label class="product-form__title-label" for="title">Title</label>
+        <input class="product-form__title-input <%=valErrors.find(err => err.path === 'title') ? 'invalid' : '' %>" id="title" type="text" name="title" value="<%= edit || isInvalid ? product.title : '' %>"/>
+      </div>
+      <div class="product-form__controls">
+        <label class="product-form__image-label" for="image">Image</label>
+        <input class="product-form__image-input" id="image" type="file" name="image" accept=".jpg, .jpeg, .png" />
+      </div>
+      <div class="product-form__controls">
+        <label class="product-form__description-label" for="description">Description</label>
+        <textarea class="product-form__description-textarea <%=valErrors.find(err => err.path === 'description') ? 'invalid' : '' %>" id="description" type="text" rows="7" name="description" ><%= edit === true || isInvalid ? product.description : '' %></textarea>
+      </div>
+      <div class="product-form__controls">
+        <label class="product-form__price-label" for="price">Price</label>
+        <input class="product-form__price-input <%=valErrors.find(err => err.path === 'price') ? 'invalid' : '' %>" id="price" type="number" name="price" step=".01" min="0" max="10000" value="<%= edit || isInvalid ? product.price : '' %>" />
+      </div>
+      <div class="product-form__controls">
+        <button class="product-form__btn" type="submit">add</button>
+        <input type="hidden" name="_csrf" value="<%=csrfToken%>"/>
+      </div>
+    </form>
+  </main>
+</body>

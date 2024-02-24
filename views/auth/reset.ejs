@@ -8,7 +8,7 @@
     </div>
     <%if(note) { %>
     <div class="note">
-      <p><%=note%></p>
+      <p class="<%=isInvalid ? 'warnMsgP' : '' %>"><%=note%></p>
     </div>
     <% } %>
     <form class="product-form" action="/reset" method="POST">

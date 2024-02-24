@@ -1,7 +1,9 @@
+const path = require('path');
 const Order = require('../models/orders');
 const Product = require('../models/product');
 const User = require('../models/user');
 const currencyFormat = require('../utils/currency');
+const fs = require('fs');
 
 exports.getHome = (req, res, next) => {
   res.render('shop/home', {
@@ -98,3 +100,25 @@ exports.getProducts = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+
+exports.getInvoice = (req, res, next) => {
+  console.log('req.session.user: ', req.session.user)
+    console.log(req.params)
+    const invoiceId = req.params.orderId;
+    const invoiceName = `invoice-${invoiceId}.pdf`;
+    const filePath = path.join('data', 'invoices', invoiceName);
+    Order.findById(invoiceId)
+    .then(order => {
+      if(order.userId.toString() === req.session.user._id.toString()){
+        fs.readFile(filePath, (err, data) => {
+          if(err){
+           return next(err);
+          }
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename" ' + invoiceName + '" ')
+            res.send(data);
+        })
+      }
+    })
+}

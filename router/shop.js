@@ -9,17 +9,19 @@ const {
   getOrders,
   getProduct,
   postCart,
-  postOrder
+  postOrder,
+  getInvoice
 } = require('../controllers/products');
 
 
 router.get('/products', getProducts);
-router.get('/product', getProduct)
+router.get('/product', getProduct);
+router.get('/products/:productId', getProduct);
 router.get('/cart', valid, getCart);
 router.post('/cart', valid, postCart);
 router.get('/orders', valid, getOrders);
 router.post('/orders', valid, postOrder);
-router.get('/products/:productId', getProduct);
+router.get('/orders/:orderId', valid, getInvoice)
 router.get('/', getHome);
 
 exports.shopRoute = router;

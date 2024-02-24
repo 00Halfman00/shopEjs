@@ -14,7 +14,10 @@
           <li>
             <% total = 0 %>
             <div class="card-container" style="background-color: green;">
-              <p class="product-total" style="background-color: green; color: white">ORDER: <%=order.date.toDateString()%></p>
+              <p class="product-total" style="background-color: green; color: white"><%=order.date.toDateString()%></p>
+            </div>
+            <div class="card-container total">
+              <p class="product-total">order id: <%=order._id%></p>
             </div>
             <ul>
               <% for(const product of order.products) {%>
@@ -25,7 +28,7 @@
                       <h2 class="product-title"><%=product.title%></h2>
                     </header>
                     <div class="card-cotrols">
-                      <img src=<%=product.image%> alt="a project image">
+                      <img src="/<%=product.image%>" alt="a project image">
                     </div>
                     <div class="card">
                       <p class="product-price"><%=convert(product.price)%></p>
@@ -42,6 +45,12 @@
               <div class="grid" >
                 <p class="product-total">total:</p>
                 <p class="product-total"><%=convert(total)%></p>
+              </div>
+            </div>
+            <div class="card-container total">
+              <div class="grid" >
+                <p class="product-total">invoice:</p>
+                <p><a class="invoice-link" href="/orders/<%=order._id%>">link to invoice</a></p>
               </div>
             </div>
             <hr>

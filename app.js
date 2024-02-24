@@ -7,16 +7,20 @@ const flash = require('connect-flash');
 const { db } = require('./utils/database');
 const https = require('https');
 const fs = require('fs');
+const multer = require('multer');
+const {fileStorage, fileFilter} = require('./utils/fileStore')
 
 const { adminRoute } = require('./router/admin');
 const { shopRoute } = require('./router/shop');
 const { authRoute } = require('./router/auth');
-const { status404 } = require('./controllers/404');
+const { status404, status500 } = require('./controllers/errors');
 const csrf = csurf();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
 app.use(express.static('public'));
+app.use('/images', express.static('images'));
 
 db.then((store) => {
   app.use(
@@ -30,27 +34,37 @@ db.then((store) => {
 })
   .then(() => {
     app.use(csrf);
-    app.use(flash()); // if problems are rendered instead of redirecting, then this flash is unnecessary
+    app.use(flash());
     app.use((req, res, next) => {
       res.locals.csrfToken = req.csrfToken();
       res.locals.isAuthenticated = req.session.isAuthenticated;
       next();
-    })
+    });
   })
   .then(() => {
     app.use('/admin', adminRoute);
     app.use(shopRoute);
     app.use(authRoute);
+    app.use('/err/500', status500);
     app.use(status404);
+    app.use((err, req, res, next) => {
+      res.redirect('/err/500');
+    });
   })
-  .then(()=> {
+  .then(() => {
     return {
       key: fs.readFileSync('../../Desktop/cert/server.key'),
-      cert: fs.readFileSync('../../Desktop/cert/server.crt')
-    }
+      cert: fs.readFileSync('../../Desktop/cert/server.crt'),
+    };
   })
   // .then(app.listen(3000))
   .then((cert) => {
-    https.createServer(cert, app).listen(443, () => console.log('server is running on port: 443'));
+    https
+      .createServer(cert, app)
+      .listen(443, () => console.log('server is running on port: 443'));
   })
-  .catch((err) => console.log(err));
+  .catch((err) => {
+    const error = new Error(err);
+        error.httpStatus = 500;
+        return next(error);
+  });

@@ -137,14 +137,12 @@ h2 {
 
 .add-btn {
   height: 100%;
+  font-family: inherit;
+  font-size: medium;
 }
 
 .product__add-btn {
   padding: 0;
-}
-
-.add-btn {
-  height: 100%;
 }
 
 @media (max-width: 400px){

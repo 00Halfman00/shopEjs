@@ -185,6 +185,7 @@ a, .order-btn, .Logout>button {
   margin:0;
   padding:0;
   color: darkcyan;
+  border: none;
 }
 
 .Login>a:hover, .Logout>button:hover {
@@ -200,6 +201,8 @@ a, .order-btn, .Logout>button {
   color: darkcyan;
   border: none;
   background-color: transparent;
+  font-family: inherit;
+  font-size: medium;
 }
 
 .user-info {
@@ -295,4 +298,10 @@ a, .order-btn, .Logout>button {
 @keyframes example {
   from {background-color: lightgray;}
   to {background-color: whitesmoke;}
+}
+
+.err {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
 }

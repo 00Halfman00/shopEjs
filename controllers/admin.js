@@ -6,89 +6,104 @@ exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     edit: false,
+    isInvalid: false,
     user: req.session.user,
     valErrors: [],
+    note: ''
   });
 };
 
 exports.postAddProduct = (req, res, next) => {
   ///////////////////////////////// WORKING WITH MONGOOSE
-  const { title, image, description, price } = req.body;
+  const { title, description, price } = req.body;
   const errors = validationResult(req);
-  console.log('postAddProduct: ', errors.array());
-  if (errors.isEmpty()) {
+
+  if (errors.isEmpty() && req.file) {
+
     const product = new Product({
       title: title,
-      image: image,
+      image: req.file.path,
       description: description,
       price: price,
       userId: req.session.user._id,
     });
+
     product
       .save()
       .then(() => {
-        res.render('admin/admin-products', {
-          pageTitle: 'Addmin Products',
-          edit: false,
-          note: '',
-          user: req.session.user,
-        });
+        res.redirect('/admin/admin-products')
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatus = 500;
+        return next(error);
+      });
   } else {
+
     res.status(422).render('admin/edit-product', {
-      pageTitle: 'Addmin Products',
-      edit: true,
+      pageTitle: 'Add Product',
+      edit: false,
+      isInvalid: true,
       valErrors: errors.array(),
       product: {
         title: title,
-        image: image,
         description: description,
         price: price,
       },
       user: req.session.user,
+      note: errors.array()[0] ?  errors.array()[0].msg : 'file type must be png, jpg, or jpeg'
     });
   }
 };
 
 exports.getEditProduct = (req, res, next) => {
   ///////////////////////////////// WORKING WITH MONGOOSE
-  const { title, image, description, price } = req.body;
+  const { title, description, price } = req.body;
   const errors = validationResult(req);
-  console.log('in getEditProduct: ', errors.array());
+
   Product.findById(req.params.productId)
     .then((product) => {
+      console.log('found product: ', product)
       if (!errors.isEmpty()) {
+
         res.status(422).render('admin/edit-product', {
           pageTitle: 'Product',
-          inputMsg: {
+          product: product,
+          inputMsg: { // error messages
             title: title,
-            image: image,
             description: description,
             price: price,
           },
           edit: true,
           user: req.session.user,
           valErrors: errors.array(),
+          note: errors.array()[0].msg
         });
       } else {
-        res.status.render('admin/edit-product', {
+
+        res.render('admin/edit-product', {
           pageTitle: 'Product',
-          product: {},
+          product: product,
           edit: true,
           user: req.session.user,
           valErrors: [],
+          note: ''
         });
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatus = 500;
+      return next(error);
+    });
 };
 
 exports.postEditProduct = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
-  const { _id, title, image, description, price } = req.body;
+  const { _id, title, description, price } = req.body;
+  const image = req.file;
   const errors = validationResult(req);
-  console.log('errors: ', errors.array());
+
   Product.findById(_id)
     .then((product) => {
       if (
@@ -96,39 +111,52 @@ exports.postEditProduct = (req, res, next) => {
         product.userId.toString() === req.session.user._id.toString()
       ) {
         if (errors.isEmpty()) {
+
           product.title = title;
-          product.image = image;
+          if(image){
+            product.image = image.path;
+          }
           product.description = description;
           product.price = price;
           return product
             .save()
             .then(() => res.status(200).redirect('/admin/admin-products'));
         } else {
+
           res.status(422).render('admin/edit-product', {
             pageTitle: 'Product',
             product: {
+              _id: product._id,
               title: title,
-              image: image,
               description: description,
               price: price,
             },
             edit: true,
             user: req.session.user,
             valErrors: errors.array(),
+            note: errors.array()[0].msg
           });
         }
       } else {
         res.redirect('/');
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatus = 500;
+      return next(error);
+    });
 };
 
 exports.deleteProduct = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
   Product.deleteOne({ _id: req.body.productId, userId: req.session.user._id })
     .then(() => res.status(200).redirect('/admin/admin-products'))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatus = 500;
+      return next(error);
+    });
 };
 
 exports.getAdminProducts = (req, res, next) => {
@@ -142,7 +170,11 @@ exports.getAdminProducts = (req, res, next) => {
           user: req.session.user,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatus = 500;
+        return next(error);
+      });
   } else {
     res.redirect('/');
   }

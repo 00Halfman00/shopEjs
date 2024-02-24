@@ -66,12 +66,18 @@ router.post(
       })
       .isAlphanumeric()
       .trim(),
-    body('confirmPassword').custom((value, { req }) => {
-      if (req.body.password !== value) {
-        throw new Error('Passwords need to match');
-      }
-      return true;
-    }),
+    body('confirmPassword')
+      .custom((value, { req }) => {
+        if (req.body.password !== value) {
+          throw new Error('Passwords need to match');
+        }
+        return true;
+      })
+      .isLength({
+        min: 7,
+      })
+      .isAlphanumeric()
+      .trim(),
   ],
   postSignup
 );
