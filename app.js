@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const path = require('path');
 const csurf = require('csurf');
 const flash = require('connect-flash');
 const { db } = require('./utils/database');

@@ -7,14 +7,14 @@
       <p class="product-total" style="background-color: darkcyan; color: white"><%=pageTitle%></p>
     </div>
     <%if(note) { %>
-    <div class="note">
-      <p class="<%=isInvalid ? 'warnMsgP' : '' %>"><%=note%></p>
-    </div>
+      <div class="note <%=isInvalid ? 'warnMsg' : '' %>">
+        <p class="<%=isInvalid ? 'warnMsgP' : '' %>"><%=note%></p>
+      </div>
     <% } %>
     <form class="product-form" action="/reset" method="POST">
       <div class="product-form__controls">
         <label class="product-form__title-label" for="email">email</label>
-        <input class="product-form__title-input" type="email" name="email" id="email" %>" >
+        <input class="product-form__title-input  <%=valErrors.find(err => err.path === 'email') ? 'invalid' : '' %>" type="email" name="email" id="email" %>" >
       </div>
       <div class="product-form__controls">
         <button class="product-form__btn" type="submit">

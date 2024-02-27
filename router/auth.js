@@ -82,7 +82,12 @@ router.post(
   postSignup
 );
 router.get('/reset', getReset);
-router.post('/reset', postReset);
+router.post('/reset', [
+  check('email')
+      .isEmail()
+      .withMessage('Please enter a valid Email')
+      .normalizeEmail()
+], postReset);
 router.get('/reset/:resetToken', getSetPassword);
 router.post('/set-password', postSetPassword);
 
