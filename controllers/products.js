@@ -5,6 +5,8 @@ const User = require('../models/user');
 const currencyFormat = require('../utils/currency');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
+const product = require('../models/product');
+const pageItems = 1;
 
 exports.getHome = (req, res, next) => {
   res.render('shop/home', {
@@ -94,49 +96,43 @@ exports.getProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   ///////////////////////////////// WORKING WITH MONGOOSE
-  Product.find()
+  const page = +req.query.page || 1;
+  let productsNum = 0;
+
+  Product.countDocuments()
+    .then(productCount => {
+      productsNum = productCount;
+      return Product.find()
+      .skip((page - 1) * pageItems)
+      .limit(pageItems)
+    })
     .then((products) => {
       res.render('shop/products-list', {
         pageTitle: 'Products',
         products: products,
         user: req.session.user,
+        currentPage: page,
+        hasPrevPage: page > 1,
+        hasNextPage: (pageItems * page) < productsNum,
+        prevPage: page - 1,
+        nextPage: page + 1,
+        lastPage: Math.ceil((productsNum/pageItems))
       });
     })
     .catch((err) => next(err));
 };
 
 exports.getInvoice = (req, res, next) => {
-  console.log('req.session.user: ', req.session.user);
-  console.log(req.params);
+
   const invoiceId = req.params.orderId;
   const invoiceName = 'invoice-' + invoiceId + '.pdf';
   const filePath = path.join('data', 'invoices', invoiceName);
   Order.findById(invoiceId).then((order) => {
-    console.log('order: ', order);
     if (!order) {
       return next(new Error('Order not found'));
     }
     if (order.userId.toString() === req.session.user._id.toString()) {
-      // fs.readFile(filePath, (err, data) => {
-      //   if (err) {
-      //     console.log('error in read file')
-      //     console.log('data: ', data)
-      //     return next(err);
-      //   }
-      //   res.setHeader('Content-Type', 'application/text/plain');
-      //   res.setHeader(
-      //     'Content-Disposition',
-      //     'attachment; filename" ' + invoiceName + ' " '
-      //   );
-      //   res.send(data);
-      // });
-      // const file = fs.ReadStream(filePath);
-      // res.setHeader('Content-Type', 'application/pdf');
-      // res.setHeader(
-      //   'Content-Disposition',
-      //   'inline; filename" ' + invoiceName + ' " '
-      // );
-      // file.pipe(res);
+
       const respond = `Order number: ${invoiceId}.`;
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(

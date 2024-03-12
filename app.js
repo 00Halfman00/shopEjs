@@ -9,7 +9,8 @@ const { db } = require('./utils/database');
 const https = require('https');
 const fs = require('fs');
 const multer = require('multer');
-const {fileStorage, fileFilter} = require('./utils/fileStore')
+const {fileStorage, fileFilter} = require('./utils/fileStore');
+const helmet = require('helmet');
 
 const { adminRoute } = require('./router/admin');
 const { shopRoute } = require('./router/shop');
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
 app.use(express.static('public'));
 app.use('/images', express.static('images'));
+app.use(helmet());
 
 db.then((store) => {
   app.use(

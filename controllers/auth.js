@@ -40,12 +40,11 @@ exports.postLogin = (req, res, next) => {
     return bcrypt
       .compare(password, user.password)
       .then((match) => {
-        console.log('do passwords match? ', match)
         if (match) {
           req.session.isAuthenticated = true;
           req.session.user = user;
           req.session.save((err) => {
-            err ? console.log(err) : '';
+           if(err) next(err);
             res.redirect('/');
           });
         } else {
@@ -68,7 +67,7 @@ exports.postLogin = (req, res, next) => {
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
-    err ? console.log('err: ', err) : '';
+    if(err) next(err);
     res.redirect('/');
   });
 };
@@ -87,7 +86,6 @@ exports.getSignup = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const { email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
-  console.log(errors.array());
 
   if (errors.isEmpty()) {
     return bcrypt.genSalt(12, function (err, salt) {
@@ -101,18 +99,17 @@ exports.postSignup = (req, res, next) => {
           .save()
           .then(() => {
             res.redirect('/login');
-          //   transport.sendMail({
-          //     from: '"👻" <shop_products.com>',
-          //     to: email,
-          //     subject: 'signed up',
-          //     text: 'Welcome. You are now signed up and can log into account.',
-          //     html: `
-          //     <p>We hope you enjoy our products</p>
-          //   `,
-          //   });
+            transport.sendMail({
+              from: '"👻" <shop_products.com>',
+              to: email,
+              subject: 'signed up',
+              text: 'Welcome. You are now signed up and can log into account.',
+              html: `
+              <p>We hope you enjoy our products</p>
+            `,
+            });
           })
           .catch((err) => {
-            console.log(err)
             const error = new Error(err);
             error.httpStatus = 500;
             return next(error);
@@ -148,7 +145,7 @@ exports.getReset = (req, res, next) => {
 exports.postReset = (req, res, next) => {
   const errors = validationResult(req);
   crypto.randomBytes(32, (err, buf) => {
-    err ? console.log(err) : '';
+    if(err) next(err);
     const token = buf.toString('hex');
     `use link to reset password: href=http://localhost:3000/reset/${token}  `;
     User.findOne({ email: req.body.email })
@@ -160,7 +157,6 @@ exports.postReset = (req, res, next) => {
         } else {
           // req.flash('note', 'Email was not found.');
           // res.redirect('/reset');
-          console.log('what it is?', errors.array())
           res.status(422).render('auth/reset', {
             pageTitle: 'Reset',
             user: req.session.user,
@@ -181,7 +177,7 @@ exports.postReset = (req, res, next) => {
               subject: 'reset password',
               html: `<div><p>Click on the link: <a href="https://localhost/reset/${token}"}>link</a> to reset password</p></div>`,
             })
-            .then((info) => console.log('message send: ', info.messageId));
+            // .then((info) => console.log('message send: ', info.messageId));
         }
       })
       .catch((err) => {

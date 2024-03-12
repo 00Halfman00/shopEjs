@@ -98,7 +98,8 @@ img {
 
 img {
   background-color: whitesmoke;
-  width: 30rem;
+  width: 40rem;
+  height: 20rem;
 }
 
 p {
@@ -143,6 +144,34 @@ h2 {
 
 .product__add-btn {
   padding: 0;
+}
+
+.products-pagination, .ad-pagination{
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.products-pagination a, .ad-pagination a {
+  padding: 1rem;
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.26);
+  background-color: whitesmoke;
+}
+
+.products-pagination a:hover{
+  background-color: rgb(2, 88, 248);
+  color: white;
+}
+
+.ad-pagination a:hover{
+  background-color: purple;
+  color: white;
+}
+
+.active-products{
+  color: rgb(243, 182, 27);
 }
 
 @media (max-width: 400px){

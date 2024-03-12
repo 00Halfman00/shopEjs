@@ -14,7 +14,7 @@
             <header class="card">
               <h2 class="product-title"><%= product.title %></h2>
             </header>
-            <div class="card-cotrols-image">
+            <div class="card-controls-image">
               <img src="/<%= product.image%>" alt="a project image"></ing>
             </div>
             <div class="card">
@@ -35,6 +35,7 @@
           <h1>Empty at the time</h1>
         <% } %>
       </div>
+      <%-include('../templates/pagination')%>
     </main>
   </body>
 </html>

@@ -59,3 +59,15 @@
 //   })
 //   user.save();
 // })
+
+// <!-- <section class="<%= pageTitle === 'Products' ? 'products-pagination' : 'ad-pagination' %>">
+//   <% if(currentPage !== 1 && prevPage !== 1) { %> <a  href="/<%=pageTitle === 'Products' ? 'products' : 'admin/admin-products' %>/?page=1">1</a>  <% } %>
+//   <% if(hasPrevPage) { %>
+//     <a href="/<%=pageTitle === 'Products' ? 'products' : 'admin/admin-products' %>/?page=<%=prevPage%>"><%=prevPage %></a>
+//   <% } %>
+//   <a class="active-products" href="/<%=pageTitle === 'Products' ? 'products' : 'admin/admin-products' %>/?page=<%=currentPage%>"><%=currentPage %></a>
+//   <% if(hasNextPage) { %> <a href="/<%=pageTitle === 'Products' ? 'products' : 'admin/admin-products' %>/?page=<%=nextPage%>"><%=nextPage %></a>  <% } %>
+//   <% if(lastPage !== currentPage && lastPage !== nextPage) { %>
+//     <a href="/<%=pageTitle === 'Products' ? 'products' : 'admin/admin-products' %>/?page=<%=lastPage%>"><%=lastPage %></a>
+//   <% } %>
+// </section> -->

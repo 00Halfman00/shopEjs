@@ -1,5 +1,7 @@
 const Product = require('../models/product');
 const { validationResult } = require('express-validator');
+const { removeFile } = require('../utils/fileRemoval');
+const pageItems = 2;
 
 exports.getAddProduct = (req, res, next) => {
   ///////////////////////////////// WORKING WITH MONGOOSE
@@ -9,7 +11,7 @@ exports.getAddProduct = (req, res, next) => {
     isInvalid: false,
     user: req.session.user,
     valErrors: [],
-    note: ''
+    note: '',
   });
 };
 
@@ -19,7 +21,6 @@ exports.postAddProduct = (req, res, next) => {
   const errors = validationResult(req);
 
   if (errors.isEmpty() && req.file) {
-
     const product = new Product({
       title: title,
       image: req.file.path,
@@ -31,7 +32,7 @@ exports.postAddProduct = (req, res, next) => {
     product
       .save()
       .then(() => {
-        res.redirect('/admin/admin-products')
+        res.redirect('/admin/admin-products');
       })
       .catch((err) => {
         const error = new Error(err);
@@ -39,7 +40,6 @@ exports.postAddProduct = (req, res, next) => {
         return next(error);
       });
   } else {
-
     res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
       edit: false,
@@ -51,7 +51,9 @@ exports.postAddProduct = (req, res, next) => {
         price: price,
       },
       user: req.session.user,
-      note: errors.array()[0] ?  errors.array()[0].msg : 'file type must be png, jpg, or jpeg'
+      note: errors.array()[0]
+        ? errors.array()[0].msg
+        : 'file type must be png, jpg, or jpeg',
     });
   }
 };
@@ -63,13 +65,12 @@ exports.getEditProduct = (req, res, next) => {
 
   Product.findById(req.params.productId)
     .then((product) => {
-      console.log('found product: ', product)
       if (!errors.isEmpty()) {
-
         res.status(422).render('admin/edit-product', {
           pageTitle: 'Product',
           product: product,
-          inputMsg: { // error messages
+          inputMsg: {
+            // error messages
             title: title,
             description: description,
             price: price,
@@ -77,17 +78,16 @@ exports.getEditProduct = (req, res, next) => {
           edit: true,
           user: req.session.user,
           valErrors: errors.array(),
-          note: errors.array()[0].msg
+          note: errors.array()[0].msg,
         });
       } else {
-
         res.render('admin/edit-product', {
           pageTitle: 'Product',
           product: product,
           edit: true,
           user: req.session.user,
           valErrors: [],
-          note: ''
+          note: '',
         });
       }
     })
@@ -111,9 +111,9 @@ exports.postEditProduct = (req, res, next) => {
         product.userId.toString() === req.session.user._id.toString()
       ) {
         if (errors.isEmpty()) {
-
           product.title = title;
-          if(image){
+          if (image) {
+            removeFile(product.image);
             product.image = image.path;
           }
           product.description = description;
@@ -122,7 +122,6 @@ exports.postEditProduct = (req, res, next) => {
             .save()
             .then(() => res.status(200).redirect('/admin/admin-products'));
         } else {
-
           res.status(422).render('admin/edit-product', {
             pageTitle: 'Product',
             product: {
@@ -134,7 +133,7 @@ exports.postEditProduct = (req, res, next) => {
             edit: true,
             user: req.session.user,
             valErrors: errors.array(),
-            note: errors.array()[0].msg
+            note: errors.array()[0].msg,
           });
         }
       } else {
@@ -150,7 +149,17 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
-  Product.deleteOne({ _id: req.body.productId, userId: req.session.user._id })
+  Product.findById(req.body.productId)
+    .then((product) => {
+      if (!product) {
+        return next(new Error('Product not found'));
+      }
+      removeFile(product.image);
+      return Product.deleteOne({
+        _id: req.body.productId,
+        userId: req.session.user._id,
+      });
+    })
     .then(() => res.status(200).redirect('/admin/admin-products'))
     .catch((err) => {
       const error = new Error(err);
@@ -161,13 +170,27 @@ exports.deleteProduct = (req, res, next) => {
 
 exports.getAdminProducts = (req, res, next) => {
   //////////////////////////////// WORKING WITH MONGOOSE
+  const page = +req.query.page || 1;
+  let productsNum = 0;
   if (req.session.user) {
-    Product.find({ userId: req.session.user._id })
+    Product.countDocuments()
+    .then(productCount => {
+      productsNum = productCount;
+      return Product.find({ userId: req.session.user._id })
+      .skip((page - 1) * pageItems)
+      .limit(pageItems)
+    })
       .then((products) => {
         res.status(200).render('admin/products-list', {
           pageTitle: 'Admin Products',
           products: products,
           user: req.session.user,
+          currentPage: page,
+          hasPrevPage: page > 1,
+          hasNextPage: (pageItems * page) < productsNum,
+          prevPage: page - 1,
+          nextPage: page + 1,
+          lastPage: Math.ceil((productsNum/pageItems))
         });
       })
       .catch((err) => {

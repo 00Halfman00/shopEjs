@@ -260,7 +260,12 @@ a, .order-btn, .Logout>button {
  }
  img {
   max-width: 100%;
-  max-height: 100%;
+  max-height:100%;
+  /* max-height: 50%; */
+ }
+ .card-controls-image{
+  max-height: 10rem;
+  padding-bottom: 1rem;
  }
  .main-header {
   height: fit-content;
@@ -283,6 +288,10 @@ a, .order-btn, .Logout>button {
  .main-header__item {
   padding-top: .3rem;
   padding-bottom: .3rem;
+ }
+ .Logout>button, .Logout{
+  padding-top:0;
+  padding-bottom: 0;
  }
 
   label, input, textarea {
